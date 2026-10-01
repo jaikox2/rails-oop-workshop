@@ -1,0 +1,1592 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Student Guide: E-Commerce Promotion Engine ด้วย Ruby on Rails, OOP, STI และ CRUD บน Windows/XAMPP">
+  <title>Workshop: E-Commerce Promotion Engine · Ruby on Rails + OOP</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #5d677d;
+      --paper: #f6f7fb;
+      --surface: #ffffff;
+      --surface-2: #edf0f7;
+      --line: #d9deea;
+      --brand: #b21f35;
+      --brand-2: #6f1627;
+      --brand-soft: #fff0f2;
+      --blue: #2356a8;
+      --blue-soft: #eef5ff;
+      --green: #17724c;
+      --green-soft: #ebfaf3;
+      --amber: #9b5b00;
+      --amber-soft: #fff7e4;
+      --red: #a82438;
+      --red-soft: #fff0f2;
+      --purple: #6840a5;
+      --code: #121827;
+      --code-ink: #e8edf8;
+      --shadow: 0 14px 42px rgba(28, 38, 62, .09);
+      --radius: 18px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 82px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Thai", Tahoma, sans-serif;
+      font-size: 16px;
+      line-height: 1.72;
+    }
+    a { color: var(--blue); text-underline-offset: 3px; }
+    a:hover { text-decoration-thickness: 2px; }
+    code { font-family: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+    :focus-visible { outline: 3px solid #4b8dff; outline-offset: 3px; }
+
+    #reading-progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      z-index: 100;
+      width: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--brand), #f2994a);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .93);
+      backdrop-filter: blur(12px);
+    }
+    .toolbar-inner {
+      max-width: var(--max);
+      margin: auto;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .toolbar-title { font-size: 13px; font-weight: 850; color: var(--muted); }
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 8px 11px;
+      color: var(--ink);
+      background: white;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    button:hover { border-color: #aab4c9; background: var(--surface-2); }
+
+    .document {
+      width: min(var(--max), calc(100% - 30px));
+      margin: 30px auto 80px;
+      display: grid;
+      grid-template-columns: 265px minmax(0, 1fr);
+      gap: 26px 30px;
+      align-items: start;
+    }
+    .doc-header {
+      position: relative;
+      overflow: hidden;
+      grid-column: 1 / -1;
+      padding: clamp(42px, 7vw, 70px);
+      border: 0;
+      border-radius: 24px;
+      color: white;
+      background:
+        radial-gradient(circle at 82% 14%, rgba(255,255,255,.16), transparent 27%),
+        radial-gradient(circle at 12% 92%, rgba(242,153,74,.22), transparent 30%),
+        linear-gradient(135deg, #30101a 0%, #76172a 52%, #b21f35 100%);
+      box-shadow: var(--shadow);
+    }
+    .doc-header::after {
+      content: "E-COMMERCE";
+      position: absolute;
+      right: -16px;
+      bottom: -50px;
+      color: rgba(255,255,255,.055);
+      font-size: clamp(68px, 11vw, 150px);
+      font-weight: 950;
+      letter-spacing: -.06em;
+      pointer-events: none;
+    }
+    .doc-header > * { position: relative; z-index: 1; }
+    .doc-kicker {
+      display: inline-flex;
+      margin: 0 0 18px;
+      padding: 7px 11px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      color: white;
+      background: rgba(255,255,255,.1);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    h1 { max-width: 880px; margin: 0; font-size: clamp(38px, 6.5vw, 76px); line-height: 1; letter-spacing: -.055em; }
+    .subtitle { max-width: 800px; margin: 15px 0 0; color: #ffd8de; font-size: clamp(18px, 2.5vw, 25px); }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 25px; }
+    .meta span { padding: 7px 10px; border-radius: 8px; color: white; background: rgba(0,0,0,.2); font-size: 12px; font-weight: 800; }
+
+    .contents {
+      position: sticky;
+      top: 76px;
+      grid-column: 1;
+      grid-row: 2 / span 40;
+      max-height: calc(100vh - 96px);
+      margin: 0;
+      padding: 18px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .contents strong { display: block; margin-bottom: 10px; font-size: 14px; }
+    .contents ol { margin: 0; padding: 0; columns: 1; list-style: none; counter-reset: toc; }
+    .contents li { margin: 1px 0; break-inside: avoid; counter-increment: toc; }
+    .contents a {
+      display: block;
+      padding: 7px 8px;
+      border-radius: 7px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+    .contents a::before { content: counter(toc, decimal-leading-zero) "  "; color: #9ba4b7; font-variant-numeric: tabular-nums; }
+    .contents a:hover { color: var(--brand); background: var(--brand-soft); }
+
+    .document > .overview-card,
+    .document > section,
+    .document > .footer { grid-column: 2; min-width: 0; }
+    .overview-card,
+    section {
+      padding: clamp(23px, 4vw, 38px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 7px 24px rgba(28,38,62,.045);
+    }
+    section { margin: 0; }
+    section:target { border-color: #ed9cab; box-shadow: 0 0 0 4px var(--brand-soft); }
+
+    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 18px; }
+    .box { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: #fcfcfe; }
+    .box h2, .box h3 { margin-top: 0; }
+    .class-tree { font-family: "Cascadia Code", Consolas, monospace; line-height: 1.85; }
+
+    .step-heading { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 13px; align-items: start; }
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      color: white;
+      background: var(--brand);
+      font-size: 20px;
+      font-weight: 900;
+      box-shadow: 0 7px 16px rgba(178,31,53,.2);
+    }
+    h2 { margin: 0 0 9px; font-size: clamp(26px, 4vw, 38px); line-height: 1.22; letter-spacing: -.035em; }
+    h3 { margin: 28px 0 8px; font-size: 21px; line-height: 1.35; }
+    h4 { margin: 21px 0 7px; font-size: 16px; }
+    p { margin: 8px 0 14px; }
+    ul, ol { padding-left: 24px; }
+    li { margin: 5px 0; }
+    hr { margin: 30px 0; border: 0; border-top: 1px solid var(--line); }
+
+    .note, .expected, .warning, .danger {
+      margin: 16px 0;
+      padding: 14px 16px;
+      border-left: 5px solid var(--blue);
+      border-radius: 0 11px 11px 0;
+      background: var(--blue-soft);
+    }
+    .expected { border-color: var(--green); background: var(--green-soft); }
+    .warning { border-color: #d58500; background: var(--amber-soft); }
+    .danger { border-color: var(--red); background: var(--red-soft); }
+    .note strong, .expected strong, .warning strong, .danger strong { display: block; margin-bottom: 2px; }
+
+    .time-table, .result-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    .time-table th, .time-table td, .result-table th, .result-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .time-table th, .result-table th { background: var(--surface-2); font-size: 12px; letter-spacing: .025em; text-transform: uppercase; }
+    .time-table tr:hover td, .result-table tr:hover td { background: #fafbfe; }
+
+    .code-block {
+      margin: 14px 0 21px;
+      overflow: hidden;
+      border: 1px solid #293148;
+      border-radius: 13px;
+      background: var(--code);
+      box-shadow: 0 12px 30px rgba(9,14,27,.12);
+    }
+    .code-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 12px; border-bottom: 1px solid #293148; background: #1a2235; color: #bcc6da; font-size: 12px; }
+    .code-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800; }
+    .copy-button { flex: 0 0 auto; border-color: #3b4762; padding: 5px 9px; color: white; background: #252f46; }
+    .copy-button:hover { background: #33405c; }
+    .copy-button.copied { border-color: #3abf88; color: #7ce3b7; background: #176947; }
+    pre { margin: 0; padding: 17px; overflow: auto; color: var(--code-ink); font-size: 13px; line-height: 1.62; tab-size: 2; white-space: pre; }
+
+    .checklist { display: grid; gap: 8px; margin: 14px 0; }
+    .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 11px; border: 1px solid var(--line); border-radius: 9px; background: #fcfcfe; }
+    .check input { width: 17px; height: 17px; margin-top: 4px; accent-color: var(--brand); }
+    .check:has(input:checked) { opacity: .68; background: var(--green-soft); }
+    .check:has(input:checked) span { color: var(--muted); text-decoration: line-through; }
+
+    details { margin: 13px 0; border: 1px solid var(--line); border-radius: 11px; background: #fcfcfe; }
+    summary { padding: 13px 15px; cursor: pointer; font-weight: 850; }
+    details[open] summary { border-bottom: 1px solid var(--line); background: var(--surface-2); }
+    .details-body { padding: 5px 16px 18px; }
+    .appendix { margin-top: 0; }
+    .appendix > h2 { padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+    .mini-label { display: inline-block; margin-right: 5px; padding: 2px 7px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); font-size: 11px; font-weight: 800; }
+    .footer { padding: 12px 4px 30px; color: var(--muted); font-size: 13px; }
+
+    .back-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 70;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      border-color: var(--brand);
+      color: white;
+      background: var(--brand);
+      transition: .2s ease;
+    }
+    .back-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .back-top:hover { color: white; background: var(--brand-2); }
+
+    @media (max-width: 930px) {
+      .document { grid-template-columns: 1fr; width: min(820px, calc(100% - 26px)); }
+      .doc-header, .contents, .document > .overview-card, .document > section, .document > .footer { grid-column: 1; grid-row: auto; }
+      .contents { position: relative; top: auto; max-height: none; }
+      .contents ol { columns: 2; column-gap: 22px; }
+    }
+    @media (max-width: 620px) {
+      .document { width: 100%; margin-top: 0; gap: 14px; }
+      .doc-header { border-radius: 0 0 18px 18px; padding: 42px 20px; }
+      .contents, .overview-card, section { border-radius: 0; padding: 21px 16px; }
+      .contents ol, .intro-grid { columns: 1; grid-template-columns: 1fr; }
+      .toolbar-title { display: none; }
+      .toolbar-inner { justify-content: flex-end; }
+      pre { font-size: 12px; }
+      .time-table, .result-table { display: block; overflow-x: auto; font-size: 12px; }
+    }
+    @media print {
+      body { background: white; font-size: 10.5pt; }
+      #reading-progress, .toolbar, .back-top { display: none !important; }
+      .document { display: block; width: auto; margin: 0; }
+      .doc-header { padding: 18px 0; border-bottom: 3px solid #222; border-radius: 0; color: black; background: white; box-shadow: none; }
+      .doc-header::after { display: none; }
+      .doc-kicker, .subtitle, .meta span { color: #333; border-color: #777; background: white; }
+      .contents { position: static; max-height: none; margin: 14px 0; box-shadow: none; }
+      .overview-card, section { margin: 14px 0; padding: 14px 0; border: 0; border-bottom: 1px solid #bbb; border-radius: 0; box-shadow: none; }
+      .code-block, .note, .expected, .warning, .danger, table, details { break-inside: avoid; }
+      details > .details-body { display: block !important; }
+      .copy-button { display: none; }
+      a { color: black; text-decoration: none; }
+      a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 8pt; word-break: break-all; }
+    }
+  </style>
+</head>
+<body>
+  <div id="reading-progress" aria-hidden="true"></div>
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <span class="toolbar-title">E-Commerce Promotion Engine · Student Guide</span>
+      <div>
+        <button id="reset-checks" type="button">ล้าง Checklist</button>
+        <button id="print" type="button">พิมพ์ / Save PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="document">
+    <header class="doc-header" id="top">
+      <p class="doc-kicker">Student hands-on guide · 4 hours · Windows</p>
+      <h1>🏗 Workshop: Ruby on Rails + OOP</h1>
+      <p class="subtitle">E-Commerce Promotion Engine — CRUD ผ่านเว็บด้วย STI และ Polymorphism</p>
+      <div class="meta">
+        <span>Ruby 3.3.12</span>
+        <span>Rails 8.1.4</span>
+        <span>mysql2 0.5.7</span>
+        <span>XAMPP MariaDB</span>
+        <span>Copy/Paste Ready</span>
+      </div>
+    </header>
+
+    <nav class="contents" aria-label="สารบัญ">
+      <strong>ลำดับ Workshop</strong>
+      <ol>
+        <li><a href="#environment">เตรียม Environment</a></li>
+        <li><a href="#project">สร้าง Rails Project</a></li>
+        <li><a href="#database">สร้าง Models และ Database</a></li>
+        <li><a href="#promotion">Promotion STI + OOP</a></li>
+        <li><a href="#orders">Order CRUD + Nested Items</a></li>
+        <li><a href="#views">Views, CSS และ Seed</a></li>
+        <li><a href="#try">ทดลองใช้และ Challenge</a></li>
+        <li><a href="#appendix">Appendix / Troubleshooting</a></li>
+      </ol>
+    </nav>
+
+    <div class="overview-card">
+      <div class="intro-grid">
+      <article class="box">
+        <h2>สิ่งที่คุณจะสร้าง</h2>
+        <ul>
+          <li>Product CRUD</li>
+          <li>Promotion CRUD แบบ STI</li>
+          <li>Order CRUD ที่มีสินค้าหลายรายการ</li>
+          <li>คำนวณ Subtotal, Discount และ Total</li>
+          <li>เพิ่ม Promotion ใหม่โดยไม่แก้ Order</li>
+        </ul>
+      </article>
+      <article class="box">
+        <h2>Class ที่ใช้</h2>
+        <div class="class-tree">
+          Promotion<br>
+          ├─ FixedAmountPromotion<br>
+          ├─ PercentagePromotion<br>
+          ├─ MinimumSpendPromotion<br>
+          └─ QuantityDiscountPromotion ✨
+        </div>
+      </article>
+    </div>
+
+    <div class="note">
+      <strong>แนวคิดหลัก</strong>
+      Order เรียก <code>promotion.discount_for(order)</code> เหมือนกันทุกครั้ง แต่ object แต่ละชนิดตอบสนองต่างกัน นี่คือ Polymorphism ที่ใช้กับ business rule จริง
+    </div>
+
+    <h2>แผนเวลา 4 ชั่วโมง</h2>
+    <table class="time-table">
+      <thead><tr><th>เวลา</th><th>หัวข้อ</th></tr></thead>
+      <tbody>
+        <tr><td>00:00–01:00</td><td>ติดตั้ง Ruby, Rails และเตรียม XAMPP</td></tr>
+        <tr><td>01:00–01:20</td><td>สร้าง Rails Project และเชื่อม Database</td></tr>
+        <tr><td>01:20–01:50</td><td>Generate CRUD, Models และ Migrations</td></tr>
+        <tr><td>01:50–02:00</td><td>พัก 10 นาที</td></tr>
+        <tr><td>02:00–02:40</td><td>Promotion STI และ OOP</td></tr>
+        <tr><td>02:40–03:15</td><td>Nested Order CRUD</td></tr>
+        <tr><td>03:15–03:40</td><td>Views, CSS, Seed และทดลองเว็บ</td></tr>
+        <tr><td>03:40–04:00</td><td>Challenge และสรุป</td></tr>
+      </tbody>
+    </table>
+
+      <div class="warning">
+        <strong>ก่อนเริ่ม</strong>
+        คู่มือนี้ใช้ Native Windows เพื่อเชื่อม XAMPP โดยตรง Rails Guides แนะนำ WSL สำหรับงานทั่วไป แต่ใน Workshop นี้ให้ใช้วิธีเดียวกันทุกเครื่องตามขั้นตอนด้านล่าง
+      </div>
+    </div>
+
+    <section id="environment">
+      <div class="step-heading">
+        <span class="step-number">1</span>
+        <div><h2>เตรียม Environment บน Windows</h2><p>ติดตั้ง Ruby+Devkit, Rails และเปิด MariaDB จาก XAMPP</p></div>
+      </div>
+
+      <h3>1.1 ติดตั้ง RubyInstaller</h3>
+      <ol>
+        <li>เปิด <a href="https://rubyinstaller.org/downloads/archives/" target="_blank" rel="noreferrer">RubyInstaller Archives</a></li>
+        <li>ดาวน์โหลด <strong>Ruby+Devkit 3.3.12-1 (x64)</strong></li>
+        <li>ใช้ path เริ่มต้น <code>C:\Ruby33-x64</code></li>
+        <li>เลือก <strong>Add Ruby executables to your PATH</strong></li>
+        <li>เมื่อหน้าต่าง <code>ridk install</code> เปิด ให้กด Enter เพื่อเลือกค่าแนะนำ <code>1,3</code></li>
+      </ol>
+
+      <div class="code-block" data-label="Start Command Prompt with Ruby">
+        <pre><code>ridk install
+ruby --version
+gem --version
+bundle --version
+ridk version
+where ruby</code></pre>
+      </div>
+      <div class="expected"><strong>ผลที่ควรได้</strong><code>ruby --version</code> แสดง Ruby 3.3.12 และ <code>where ruby</code> ชี้ไป <code>C:\Ruby33-x64</code></div>
+
+      <h3>1.2 ติดตั้ง Rails</h3>
+      <div class="code-block" data-label="Start Command Prompt with Ruby">
+        <pre><code>gem install rails -v 8.1.4 --no-document
+rails --version</code></pre>
+      </div>
+      <div class="expected"><strong>ผลที่ควรได้</strong><code>Rails 8.1.4</code></div>
+
+      <h3>1.3 เปิด MariaDB ใน XAMPP</h3>
+      <ol>
+        <li>เปิด XAMPP Control Panel</li>
+        <li>กด Start เฉพาะแถว <strong>MySQL</strong> — ไม่ต้อง Start Apache</li>
+        <li>ตรวจว่าพอร์ตเป็น <code>3306</code></li>
+      </ol>
+      <div class="code-block" data-label="Command Prompt · ตรวจ Database Client">
+        <pre><code>"C:\xampp\mysql\bin\mysql.exe" --version
+"C:\xampp\mysql\bin\mysql.exe" -u root</code></pre>
+      </div>
+      <p>เมื่อเห็น prompt <code>MariaDB [(none)]&gt;</code> ให้วาง SQL ต่อไปนี้:</p>
+      <div class="code-block" data-label="MariaDB Shell · สร้าง Database และ User">
+        <pre><code>CREATE DATABASE IF NOT EXISTS promotion_playground_development
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE DATABASE IF NOT EXISTS promotion_playground_test
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER IF NOT EXISTS 'promo_user'@'localhost'
+  IDENTIFIED BY 'promo_pass_2026';
+CREATE USER IF NOT EXISTS 'promo_user'@'127.0.0.1'
+  IDENTIFIED BY 'promo_pass_2026';
+
+GRANT ALL PRIVILEGES ON promotion_playground_development.*
+  TO 'promo_user'@'localhost';
+GRANT ALL PRIVILEGES ON promotion_playground_test.*
+  TO 'promo_user'@'localhost';
+GRANT ALL PRIVILEGES ON promotion_playground_development.*
+  TO 'promo_user'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON promotion_playground_test.*
+  TO 'promo_user'@'127.0.0.1';
+
+FLUSH PRIVILEGES;
+SHOW DATABASES;
+EXIT;</code></pre>
+      </div>
+      <div class="danger"><strong>Development only</strong>User/password นี้ใช้เฉพาะในเครื่อง Workshop ห้ามใช้กับ production หรือเปิด XAMPP ให้ Internet เข้าถึง</div>
+      <div class="checklist">
+        <label class="check"><input data-check="env-ruby" type="checkbox"><span>Ruby และ Bundler ทำงาน</span></label>
+        <label class="check"><input data-check="env-rails" type="checkbox"><span>Rails แสดงเวอร์ชัน 8.1.4</span></label>
+        <label class="check"><input data-check="env-db" type="checkbox"><span>MySQL ใน XAMPP เป็นสีเขียวและเห็นสอง databases</span></label>
+      </div>
+    </section>
+
+    <section id="project">
+      <div class="step-heading">
+        <span class="step-number">2</span>
+        <div><h2>สร้าง Rails Project</h2><p>สร้างแอปนอก <code>htdocs</code> แล้วเชื่อม XAMPP</p></div>
+      </div>
+
+      <div class="code-block" data-label="Command Prompt · สร้าง Project">
+        <pre><code>mkdir C:\rails-workshop
+cd /d C:\rails-workshop
+rails _8.1.4_ new promotion_playground --database=mysql
+cd promotion_playground</code></pre>
+      </div>
+
+      <p>เปิด <code>Gemfile</code> แล้วตรวจให้สองบรรทัดนี้ใช้ exact version:</p>
+      <div class="code-block" data-label="Gemfile" data-lang="ruby">
+        <pre><code>gem "rails", "8.1.4"
+gem "mysql2", "0.5.7"</code></pre>
+      </div>
+
+      <p>แทนที่ <code>config/database.yml</code> ทั้งไฟล์:</p>
+      <div class="code-block" data-label="config/database.yml" data-lang="yaml">
+        <pre><code>default: &amp;default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: &lt;%= ENV.fetch("RAILS_MAX_THREADS", 5) %&gt;
+  username: &lt;%= ENV.fetch("PROMO_DB_USER", "promo_user") %&gt;
+  password: &lt;%= ENV.fetch("PROMO_DB_PASSWORD", "promo_pass_2026") %&gt;
+  host: &lt;%= ENV.fetch("PROMO_DB_HOST", "127.0.0.1") %&gt;
+  port: &lt;%= ENV.fetch("PROMO_DB_PORT", 3306) %&gt;
+
+development:
+  &lt;&lt;: *default
+  database: promotion_playground_development
+
+test:
+  &lt;&lt;: *default
+  database: promotion_playground_test
+
+production:
+  &lt;&lt;: *default
+  database: &lt;%= ENV.fetch("PROMO_DB_NAME", "promotion_playground_production") %&gt;</code></pre>
+      </div>
+
+      <div class="code-block" data-label="Command Prompt · ติดตั้ง Gems และทดสอบ Connection">
+        <pre><code>bundle install
+bundle exec rails db:prepare
+bundle exec rails runner "puts ActiveRecord::Base.connection.select_value('SELECT 1')"</code></pre>
+      </div>
+      <div class="expected"><strong>ผลที่ควรได้</strong>บรรทัดสุดท้ายพิมพ์ <code>1</code> โดยไม่มี <code>Access denied</code> หรือ <code>Can't connect</code></div>
+    </section>
+
+    <section id="database">
+      <div class="step-heading">
+        <span class="step-number">3</span>
+        <div><h2>สร้าง Models และ CRUD</h2><p>ใช้ Scaffold ลดเวลางานพื้นฐาน แล้วโฟกัส OOP</p></div>
+      </div>
+
+      <h3>3.1 Generate Resources</h3>
+      <div class="code-block" data-label="Command Prompt · Rails Generators">
+        <pre><code>bundle exec rails generate scaffold Product name:string sku:string price_cents:integer active:boolean
+bundle exec rails generate scaffold Promotion name:string type:string active:boolean amount_cents:integer percentage:integer minimum_spend_cents:integer maximum_discount_cents:integer minimum_quantity:integer
+bundle exec rails generate scaffold Order customer_name:string status:integer promotion:references subtotal_cents:integer discount_cents:integer total_cents:integer
+bundle exec rails generate model OrderItem order:references product:references quantity:integer unit_price_cents:integer
+bundle exec rails generate model FixedAmountPromotion --parent=Promotion
+bundle exec rails generate model PercentagePromotion --parent=Promotion
+bundle exec rails generate model MinimumSpendPromotion --parent=Promotion</code></pre>
+      </div>
+      <div class="warning"><strong>ยังไม่รัน db:migrate</strong>แก้ migrations ทั้ง 4 ไฟล์ก่อน โดย timestamp ด้านหน้าชื่อไฟล์จะแตกต่างกันในแต่ละเครื่อง</div>
+
+      <h3>3.2 แก้ Migrations</h3>
+      <div class="code-block" data-label="db/migrate/*_create_products.rb" data-lang="ruby">
+        <pre><code>class CreateProducts &lt; ActiveRecord::Migration[8.1]
+  def change
+    create_table :products do |t|
+      t.string :name, null: false
+      t.string :sku, null: false
+      t.integer :price_cents, null: false, default: 0
+      t.boolean :active, null: false, default: true
+      t.timestamps
+    end
+
+    add_index :products, :sku, unique: true
+  end
+end</code></pre>
+      </div>
+
+      <div class="code-block" data-label="db/migrate/*_create_promotions.rb" data-lang="ruby">
+        <pre><code>class CreatePromotions &lt; ActiveRecord::Migration[8.1]
+  def change
+    create_table :promotions do |t|
+      t.string :name, null: false
+      t.string :type, null: false
+      t.boolean :active, null: false, default: true
+      t.integer :amount_cents
+      t.integer :percentage
+      t.integer :minimum_spend_cents
+      t.integer :maximum_discount_cents
+      t.integer :minimum_quantity
+      t.timestamps
+    end
+
+    add_index :promotions, :type
+  end
+end</code></pre>
+      </div>
+
+      <div class="code-block" data-label="db/migrate/*_create_orders.rb" data-lang="ruby">
+        <pre><code>class CreateOrders &lt; ActiveRecord::Migration[8.1]
+  def change
+    create_table :orders do |t|
+      t.string :customer_name, null: false
+      t.integer :status, null: false, default: 0
+      t.references :promotion, null: true, foreign_key: true
+      t.integer :subtotal_cents, null: false, default: 0
+      t.integer :discount_cents, null: false, default: 0
+      t.integer :total_cents, null: false, default: 0
+      t.timestamps
+    end
+  end
+end</code></pre>
+      </div>
+
+      <div class="code-block" data-label="db/migrate/*_create_order_items.rb" data-lang="ruby">
+        <pre><code>class CreateOrderItems &lt; ActiveRecord::Migration[8.1]
+  def change
+    create_table :order_items do |t|
+      t.references :order, null: false, foreign_key: true
+      t.references :product, null: false, foreign_key: true
+      t.integer :quantity, null: false, default: 1
+      t.integer :unit_price_cents, null: false, default: 0
+      t.timestamps
+    end
+  end
+end</code></pre>
+      </div>
+
+      <div class="code-block" data-label="Command Prompt · สร้าง Tables">
+        <pre><code>bundle exec rails db:migrate
+bundle exec rails routes</code></pre>
+      </div>
+      <div class="expected"><strong>ผลที่ควรได้</strong>มี tables <code>products</code>, <code>promotions</code>, <code>orders</code>, <code>order_items</code> และ REST routes จาก Scaffold</div>
+    </section>
+
+    <section id="promotion">
+      <div class="step-heading">
+        <span class="step-number">4</span>
+        <div><h2>Promotion STI + OOP</h2><p>Parent class กำหนด flow ร่วม ส่วน Child classes override สิ่งที่แตกต่าง</p></div>
+      </div>
+
+      <h3>4.1 ก่อนใช้ OOP</h3>
+      <p>วิธีที่ดูง่ายในตอนแรกคือรวมทุกสูตรไว้ใน <code>case</code> แต่ทุกครั้งที่เพิ่มโปรโมชั่นใหม่ เราต้องกลับมาแก้ method เดิม:</p>
+      <div class="code-block" data-label="ตัวอย่าง Code Smell · ไม่ต้องคัดลอก" data-lang="ruby">
+        <pre><code>case promotion.type
+when "FixedAmountPromotion"
+  promotion.amount_cents
+when "PercentagePromotion"
+  order.subtotal_cents * promotion.percentage / 100
+when "MinimumSpendPromotion"
+  order.subtotal_cents &gt;= promotion.minimum_spend_cents ? promotion.amount_cents : 0
+end</code></pre>
+      </div>
+
+      <h3>4.2 Parent Class: Promotion</h3>
+      <div class="code-block" data-label="app/models/promotion.rb" data-lang="ruby">
+        <pre><code>class Promotion &lt; ApplicationRecord
+  TYPES = %w[
+    FixedAmountPromotion
+    PercentagePromotion
+    MinimumSpendPromotion
+  ].freeze
+
+  TYPE_LABELS = {
+    "FixedAmountPromotion" =&gt; "ลดจำนวนคงที่",
+    "PercentagePromotion" =&gt; "ลดเป็นเปอร์เซ็นต์",
+    "MinimumSpendPromotion" =&gt; "ลดเมื่อซื้อถึงขั้นต่ำ"
+  }.freeze
+
+  # ทำให้ form_with และ redirect_to ใช้ /promotions กับ STI subclasses
+  def self.model_name
+    return super if self == Promotion
+
+    Promotion.model_name
+  end
+
+  has_many :orders, dependent: :restrict_with_error
+
+  validates :name, presence: true
+  validates :type, inclusion: { in: TYPES }
+
+  scope :active, -&gt; { where(active: true).order(:name) }
+
+  # Template Method: ลำดับหลักเหมือนกันทุก Promotion
+  def discount_for(order)
+    return 0 unless eligible?(order)
+
+    calculate_discount(order).to_i.clamp(0, order.subtotal_cents.to_i)
+  end
+
+  def type_label
+    TYPE_LABELS.fetch(type, type)
+  end
+
+  def rule_summary
+    raise NotImplementedError, "#{self.class} must implement #rule_summary"
+  end
+
+  protected
+
+  def eligible?(_order)
+    active?
+  end
+
+  def format_baht(cents)
+    format("%.2f", cents.to_i / 100.0)
+  end
+
+  private
+
+  def calculate_discount(_order)
+    raise NotImplementedError, "#{self.class} must implement #calculate_discount"
+  end
+end</code></pre>
+      </div>
+
+      <h3>4.3 Child Class: FixedAmountPromotion</h3>
+      <div class="code-block" data-label="app/models/fixed_amount_promotion.rb" data-lang="ruby">
+        <pre><code>class FixedAmountPromotion &lt; Promotion
+  validates :amount_cents,
+            numericality: { only_integer: true, greater_than: 0 }
+
+  def rule_summary
+    "ลดคงที่ #{format_baht(amount_cents)} บาท"
+  end
+
+  private
+
+  def calculate_discount(_order)
+    amount_cents
+  end
+end</code></pre>
+      </div>
+
+      <h3>4.4 Child Class: PercentagePromotion</h3>
+      <div class="code-block" data-label="app/models/percentage_promotion.rb" data-lang="ruby">
+        <pre><code>class PercentagePromotion &lt; Promotion
+  validates :percentage,
+            numericality: {
+              only_integer: true,
+              greater_than: 0,
+              less_than_or_equal_to: 100
+            }
+  validates :maximum_discount_cents,
+            numericality: { only_integer: true, greater_than: 0 },
+            allow_nil: true
+
+  def rule_summary
+    cap = maximum_discount_cents.to_i.positive? ?
+      " สูงสุด #{format_baht(maximum_discount_cents)} บาท" : ""
+
+    "ลด #{percentage}%#{cap}"
+  end
+
+  private
+
+  def calculate_discount(order)
+    discount = order.subtotal_cents * percentage / 100
+    return discount unless maximum_discount_cents.to_i.positive?
+
+    [discount, maximum_discount_cents].min
+  end
+end</code></pre>
+      </div>
+
+      <h3>4.5 Child Class: MinimumSpendPromotion</h3>
+      <div class="code-block" data-label="app/models/minimum_spend_promotion.rb" data-lang="ruby">
+        <pre><code>class MinimumSpendPromotion &lt; Promotion
+  validates :minimum_spend_cents,
+            numericality: { only_integer: true, greater_than: 0 }
+  validates :amount_cents,
+            numericality: { only_integer: true, greater_than: 0 }
+
+  def rule_summary
+    "ซื้อครบ #{format_baht(minimum_spend_cents)} บาท ลด #{format_baht(amount_cents)} บาท"
+  end
+
+  protected
+
+  def eligible?(order)
+    super &amp;&amp; order.subtotal_cents &gt;= minimum_spend_cents
+  end
+
+  private
+
+  def calculate_discount(_order)
+    amount_cents
+  end
+end</code></pre>
+      </div>
+
+      <div class="note">
+        <strong>OOP ที่เกิดขึ้นตรงนี้</strong>
+        <ul>
+          <li><strong>Encapsulation:</strong> Promotion ดูแล eligibility และสูตรของตัวเอง</li>
+          <li><strong>Inheritance:</strong> ทั้งสาม classes รับ behavior ร่วมจาก Promotion</li>
+          <li><strong>Polymorphism:</strong> ทุก object ตอบ <code>discount_for(order)</code></li>
+          <li><strong>Template Method:</strong> Base class คุมลำดับ eligible → calculate → clamp</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="orders">
+      <div class="step-heading">
+        <span class="step-number">5</span>
+        <div><h2>Order CRUD + Nested Items</h2><p>Order หนึ่งรายการมีสินค้าหลายรายการและเลือก Promotion ได้หนึ่งรายการ</p></div>
+      </div>
+
+      <h3>5.1 Product</h3>
+      <div class="code-block" data-label="app/models/product.rb" data-lang="ruby">
+        <pre><code>class Product &lt; ApplicationRecord
+  has_many :order_items, dependent: :restrict_with_error
+
+  validates :name, presence: true
+  validates :sku, presence: true, uniqueness: true
+  validates :price_cents,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  scope :available, -&gt; { where(active: true).order(:name) }
+end</code></pre>
+      </div>
+
+      <h3>5.2 OrderItem</h3>
+      <div class="code-block" data-label="app/models/order_item.rb" data-lang="ruby">
+        <pre><code>class OrderItem &lt; ApplicationRecord
+  belongs_to :order
+  belongs_to :product
+
+  validates :quantity,
+            numericality: { only_integer: true, greater_than: 0 }
+  validates :unit_price_cents,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  # Snapshot ราคา: ราคา Product เปลี่ยนภายหลังจะไม่กระทบ Order เดิม
+  def capture_unit_price
+    return if product.blank?
+    return unless unit_price_cents.blank? || will_save_change_to_product_id?
+
+    self.unit_price_cents = product.price_cents
+  end
+
+  def subtotal_cents
+    unit_price_cents.to_i * quantity.to_i
+  end
+end</code></pre>
+      </div>
+
+      <h3>5.3 Order</h3>
+      <div class="code-block" data-label="app/models/order.rb" data-lang="ruby">
+        <pre><code>class Order &lt; ApplicationRecord
+  belongs_to :promotion, optional: true
+  has_many :order_items, inverse_of: :order, dependent: :destroy
+
+  accepts_nested_attributes_for :order_items,
+                                allow_destroy: true,
+                                reject_if: -&gt;(attributes) { attributes["product_id"].blank? }
+
+  enum :status, { draft: 0, confirmed: 1, cancelled: 2 }, default: :draft
+
+  validates :customer_name, presence: true
+  validate :must_have_at_least_one_item
+
+  def active_items
+    order_items.reject(&amp;:marked_for_destruction?)
+  end
+
+  def total_quantity
+    active_items.sum { |item| item.quantity.to_i }
+  end
+
+  def recalculate_totals
+    active_items.each(&amp;:capture_unit_price)
+    self.subtotal_cents = active_items.sum(&amp;:subtotal_cents)
+    self.discount_cents = (promotion&amp;.discount_for(self)).to_i
+    self.total_cents = subtotal_cents - discount_cents
+    self
+  end
+
+  private
+
+  def must_have_at_least_one_item
+    return if active_items.any? { |item| item.product_id.present? }
+
+    errors.add(:order_items, "ต้องมีสินค้าอย่างน้อยหนึ่งรายการ")
+  end
+end</code></pre>
+      </div>
+
+      <h3>5.4 OrdersController</h3>
+      <div class="code-block" data-label="app/controllers/orders_controller.rb" data-lang="ruby">
+        <pre><code>class OrdersController &lt; ApplicationController
+  before_action :set_order, only: %i[show edit update destroy]
+
+  def index
+    @orders = Order.includes(:promotion, order_items: :product)
+                   .order(created_at: :desc)
+  end
+
+  def show
+  end
+
+  def new
+    @order = Order.new(status: :draft)
+    build_item_slots
+  end
+
+  def edit
+    build_item_slots
+  end
+
+  def create
+    @order = Order.new(order_params)
+    @order.recalculate_totals
+
+    if @order.save
+      redirect_to @order, notice: "สร้างออเดอร์เรียบร้อยแล้ว"
+    else
+      build_item_slots
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    @order.assign_attributes(order_params)
+    @order.recalculate_totals
+
+    if @order.save
+      redirect_to @order, notice: "อัปเดตออเดอร์เรียบร้อยแล้ว", status: :see_other
+    else
+      build_item_slots
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @order.destroy!
+    redirect_to orders_path, notice: "ลบออเดอร์เรียบร้อยแล้ว", status: :see_other
+  end
+
+  private
+
+  def set_order
+    @order = Order.find(params[:id])
+  end
+
+  def build_item_slots
+    [3 - @order.order_items.size, 0].max.times do
+      @order.order_items.build
+    end
+  end
+
+  def order_params
+    params.require(:order).permit(
+      :customer_name,
+      :status,
+      :promotion_id,
+      order_items_attributes: %i[id product_id quantity _destroy]
+    )
+  end
+end</code></pre>
+      </div>
+
+      <h3>5.5 Routes</h3>
+      <div class="code-block" data-label="config/routes.rb" data-lang="ruby">
+        <pre><code>Rails.application.routes.draw do
+  resources :products
+  resources :promotions
+  resources :orders
+
+  root "orders#index"
+end</code></pre>
+      </div>
+      <div class="expected"><strong>Responsibility</strong>Controller รับ request และเรียก <code>order.recalculate_totals</code> แต่ไม่รู้สูตรของ Promotion</div>
+    </section>
+
+    <section id="views">
+      <div class="step-heading">
+        <span class="step-number">6</span>
+        <div><h2>Views, CSS และ Seed</h2><p>สร้างหน้าเว็บสำหรับเลือกสินค้า เลือก Promotion และแสดงยอด</p></div>
+      </div>
+
+      <h3>6.1 Money Helper</h3>
+      <div class="code-block" data-label="app/helpers/application_helper.rb" data-lang="ruby">
+        <pre><code>module ApplicationHelper
+  def money(cents)
+    number_to_currency(
+      cents.to_i / 100.0,
+      unit: "฿",
+      format: "%u%n",
+      delimiter: ",",
+      precision: 2
+    )
+  end
+end</code></pre>
+      </div>
+
+      <h3>6.2 Order Form</h3>
+      <div class="code-block" data-label="app/views/orders/_form.html.erb" data-lang="erb">
+        <pre><code>&lt;%= form_with(model: order) do |form| %&gt;
+  &lt;% if order.errors.any? %&gt;
+    &lt;div class="errors"&gt;
+      &lt;strong&gt;บันทึกไม่ได้&lt;/strong&gt;
+      &lt;ul&gt;
+        &lt;% order.errors.full_messages.each do |message| %&gt;
+          &lt;li&gt;&lt;%= message %&gt;&lt;/li&gt;
+        &lt;% end %&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;% end %&gt;
+
+  &lt;div class="field-grid"&gt;
+    &lt;div class="field"&gt;
+      &lt;%= form.label :customer_name, "ชื่อลูกค้า" %&gt;
+      &lt;%= form.text_field :customer_name, required: true %&gt;
+    &lt;/div&gt;
+    &lt;div class="field"&gt;
+      &lt;%= form.label :status, "สถานะ" %&gt;
+      &lt;%= form.select :status, Order.statuses.keys.map { |status| [status.humanize, status] } %&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="field"&gt;
+    &lt;%= form.label :promotion_id, "โปรโมชั่น" %&gt;
+    &lt;%= form.select :promotion_id,
+      Promotion.active.map { |promotion| ["#{promotion.name} — #{promotion.rule_summary}", promotion.id] },
+      { include_blank: "ไม่ใช้โปรโมชั่น" } %&gt;
+  &lt;/div&gt;
+
+  &lt;h2&gt;สินค้าในออเดอร์&lt;/h2&gt;
+  &lt;%= form.fields_for :order_items do |item_fields| %&gt;
+    &lt;div class="line-item"&gt;
+      &lt;div class="field"&gt;
+        &lt;%= item_fields.label :product_id, "สินค้า" %&gt;
+        &lt;%= item_fields.select :product_id,
+          Product.available.map { |product| ["#{product.name} — #{money(product.price_cents)}", product.id] },
+          { include_blank: "เลือกสินค้า" } %&gt;
+      &lt;/div&gt;
+      &lt;div class="field"&gt;
+        &lt;%= item_fields.label :quantity, "จำนวน" %&gt;
+        &lt;%= item_fields.number_field :quantity, min: 1, value: item_fields.object.quantity || 1 %&gt;
+      &lt;/div&gt;
+      &lt;% if item_fields.object.persisted? %&gt;
+        &lt;label&gt;&lt;%= item_fields.check_box :_destroy %&gt; ลบรายการนี้&lt;/label&gt;
+      &lt;% end %&gt;
+    &lt;/div&gt;
+  &lt;% end %&gt;
+
+  &lt;%= form.submit class: "button primary" %&gt;
+&lt;% end %&gt;</code></pre>
+      </div>
+
+      <h3>6.3 Order List</h3>
+      <div class="code-block" data-label="app/views/orders/index.html.erb" data-lang="erb">
+        <pre><code>&lt;div class="page-heading"&gt;
+  &lt;h1&gt;Orders&lt;/h1&gt;
+  &lt;%= link_to "New order", new_order_path, class: "button primary" %&gt;
+&lt;/div&gt;
+
+&lt;div class="table-card"&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;&lt;th&gt;Customer&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;th&gt;Promotion&lt;/th&gt;&lt;th&gt;Total&lt;/th&gt;&lt;th&gt;&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;% @orders.each do |order| %&gt;
+        &lt;tr&gt;
+          &lt;td&gt;&lt;%= order.customer_name %&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;%= order.status %&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;%= order.promotion&amp;.name || "—" %&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;%= money(order.total_cents) %&gt;&lt;/td&gt;
+          &lt;td&gt;
+            &lt;%= link_to "Show", order %&gt; ·
+            &lt;%= link_to "Edit", edit_order_path(order) %&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;% end %&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <h3>6.4 Order Detail</h3>
+      <div class="code-block" data-label="app/views/orders/show.html.erb" data-lang="erb">
+        <pre><code>&lt;h1&gt;Order #&lt;%= @order.id %&gt; — &lt;%= @order.customer_name %&gt;&lt;/h1&gt;
+
+&lt;div class="table-card"&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;&lt;th&gt;Product&lt;/th&gt;&lt;th&gt;Unit price&lt;/th&gt;&lt;th&gt;Qty&lt;/th&gt;&lt;th&gt;Subtotal&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;% @order.order_items.each do |item| %&gt;
+        &lt;tr&gt;
+          &lt;td&gt;&lt;%= item.product.name %&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;%= money(item.unit_price_cents) %&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;%= item.quantity %&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;%= money(item.subtotal_cents) %&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;% end %&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;div class="summary-card"&gt;
+  &lt;p&gt;&lt;span&gt;Subtotal&lt;/span&gt;&lt;strong&gt;&lt;%= money(@order.subtotal_cents) %&gt;&lt;/strong&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;span&gt;Promotion&lt;/span&gt;&lt;strong&gt;&lt;%= @order.promotion&amp;.name || "ไม่ใช้" %&gt;&lt;/strong&gt;&lt;/p&gt;
+  &lt;p class="discount"&gt;&lt;span&gt;Discount&lt;/span&gt;&lt;strong&gt;− &lt;%= money(@order.discount_cents) %&gt;&lt;/strong&gt;&lt;/p&gt;
+  &lt;p class="grand-total"&gt;&lt;span&gt;Total&lt;/span&gt;&lt;strong&gt;&lt;%= money(@order.total_cents) %&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="actions"&gt;
+  &lt;%= link_to "Edit order", edit_order_path(@order), class: "button" %&gt;
+  &lt;%= link_to "Back", orders_path, class: "button" %&gt;
+  &lt;%= button_to "Delete order", @order,
+    method: :delete,
+    form: { data: { turbo_confirm: "ลบออเดอร์นี้?" } },
+    class: "button danger-button" %&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <h3>6.5 Promotion Form</h3>
+      <details>
+        <summary>เปิดโค้ด <code>app/views/promotions/_form.html.erb</code></summary>
+        <div class="details-body">
+          <div class="code-block" data-label="app/views/promotions/_form.html.erb" data-lang="erb">
+            <pre><code>&lt;%= form_with(model: promotion) do |form| %&gt;
+  &lt;% if promotion.errors.any? %&gt;
+    &lt;div class="errors"&gt;&lt;%= promotion.errors.full_messages.to_sentence %&gt;&lt;/div&gt;
+  &lt;% end %&gt;
+
+  &lt;div class="field"&gt;
+    &lt;%= form.label :name, "ชื่อโปรโมชั่น" %&gt;
+    &lt;%= form.text_field :name, required: true %&gt;
+  &lt;/div&gt;
+
+  &lt;div class="field"&gt;
+    &lt;%= form.label :type, "ประเภท" %&gt;
+    &lt;% if promotion.new_record? %&gt;
+      &lt;%= form.select :type, Promotion::TYPES.map { |type| [Promotion::TYPE_LABELS.fetch(type), type] } %&gt;
+    &lt;% else %&gt;
+      &lt;%= form.hidden_field :type %&gt;
+      &lt;p&gt;&lt;%= promotion.type_label %&gt; — ไม่อนุญาตให้เปลี่ยน type หลังสร้าง&lt;/p&gt;
+    &lt;% end %&gt;
+  &lt;/div&gt;
+
+  &lt;div class="field"&gt;
+    &lt;%= form.label :amount_cents, "ส่วนลด (สตางค์)" %&gt;
+    &lt;%= form.number_field :amount_cents, min: 0 %&gt;
+  &lt;/div&gt;
+  &lt;div class="field"&gt;
+    &lt;%= form.label :percentage, "เปอร์เซ็นต์" %&gt;
+    &lt;%= form.number_field :percentage, min: 1, max: 100 %&gt;
+  &lt;/div&gt;
+  &lt;div class="field"&gt;
+    &lt;%= form.label :minimum_spend_cents, "ยอดขั้นต่ำ (สตางค์)" %&gt;
+    &lt;%= form.number_field :minimum_spend_cents, min: 0 %&gt;
+  &lt;/div&gt;
+  &lt;div class="field"&gt;
+    &lt;%= form.label :maximum_discount_cents, "ส่วนลดสูงสุด (สตางค์)" %&gt;
+    &lt;%= form.number_field :maximum_discount_cents, min: 0 %&gt;
+  &lt;/div&gt;
+  &lt;div class="field"&gt;
+    &lt;%= form.label :minimum_quantity, "จำนวนสินค้าขั้นต่ำ" %&gt;
+    &lt;%= form.number_field :minimum_quantity, min: 1 %&gt;
+  &lt;/div&gt;
+
+  &lt;label&gt;&lt;%= form.check_box :active %&gt; เปิดใช้งาน&lt;/label&gt;
+  &lt;%= form.submit class: "button primary" %&gt;
+&lt;% end %&gt;</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h3>6.6 Layout และ CSS</h3>
+      <div class="code-block" data-label="app/views/layouts/application.html.erb" data-lang="erb">
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;E-Commerce Promotion Playground&lt;/title&gt;
+    &lt;meta name="viewport" content="width=device-width,initial-scale=1"&gt;
+    &lt;%= csrf_meta_tags %&gt;
+    &lt;%= csp_meta_tag %&gt;
+    &lt;%= stylesheet_link_tag "application", "data-turbo-track": "reload" %&gt;
+    &lt;%= javascript_importmap_tags %&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;nav class="nav"&gt;
+      &lt;%= link_to "E-Commerce Playground", root_path, class: "brand" %&gt;
+      &lt;div&gt;
+        &lt;%= link_to "Products", products_path %&gt;
+        &lt;%= link_to "Promotions", promotions_path %&gt;
+        &lt;%= link_to "Orders", orders_path %&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+    &lt;main class="container"&gt;
+      &lt;% flash.each do |type, message| %&gt;
+        &lt;div class="flash &lt;%= type %&gt;"&gt;&lt;%= message %&gt;&lt;/div&gt;
+      &lt;% end %&gt;
+      &lt;%= yield %&gt;
+    &lt;/main&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      </div>
+
+      <div class="note"><strong>CSS มีอยู่สองชุด</strong>CSS ของคู่มือนี้อยู่ใน <code>&lt;style&gt;</code> ของ <code>index.html</code> ส่วนโค้ดด้านล่างต้องคัดลอกไปยัง Rails project</div>
+      <div class="code-block" data-label="app/assets/stylesheets/application.css" data-lang="css">
+        <pre><code>:root {
+  --ink: #172033;
+  --line: #dfe3eb;
+  --paper: #f5f6fa;
+  --brand: #b21f35;
+  --green: #187451;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--paper); font-family: system-ui, "Segoe UI", sans-serif; }
+a { color: var(--brand); }
+.nav { display: flex; justify-content: space-between; padding: 16px max(20px, calc((100vw - 1050px) / 2)); background: #21131a; }
+.nav a { margin-left: 18px; color: white; text-decoration: none; font-weight: 700; }
+.nav .brand { margin-left: 0; }
+.container { max-width: 1050px; margin: auto; padding: 34px 20px 70px; }
+.page-heading { display: flex; justify-content: space-between; align-items: center; }
+.button, input[type="submit"] { display: inline-block; border: 1px solid var(--line); border-radius: 7px; padding: 9px 13px; background: white; color: var(--ink); text-decoration: none; font: inherit; font-weight: 700; cursor: pointer; }
+.button.primary, input[type="submit"].primary { border-color: var(--brand); background: var(--brand); color: white; }
+.table-card, .summary-card, form { padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: white; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 11px; border-bottom: 1px solid var(--line); text-align: left; }
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { margin-bottom: 14px; }
+.field label { display: block; margin-bottom: 5px; font-weight: 700; }
+.field input, .field select { width: 100%; padding: 9px; border: 1px solid #b9c0cc; border-radius: 6px; }
+.line-item { display: grid; grid-template-columns: 1fr 120px 140px; gap: 12px; align-items: end; margin-bottom: 10px; padding: 13px; border: 1px solid var(--line); border-radius: 7px; }
+.errors, .flash { margin-bottom: 15px; padding: 12px; border-radius: 7px; background: #fce8e6; color: #8c1d18; }
+.flash.notice { background: #e6f4ea; color: var(--green); }
+.summary-card { max-width: 500px; margin: 20px 0 20px auto; }
+.summary-card p { display: flex; justify-content: space-between; }
+.summary-card .discount { color: var(--green); }
+.summary-card .grand-total { padding-top: 12px; border-top: 2px solid var(--ink); font-size: 21px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+.actions form { margin: 0; padding: 0; border: 0; background: transparent; }
+.danger-button { border-color: #b3261e; color: #b3261e; }
+@media (max-width: 700px) { .field-grid, .line-item { grid-template-columns: 1fr; } .table-card { overflow-x: auto; } }</code></pre>
+      </div>
+
+      <h3>6.7 Seed Data</h3>
+      <div class="code-block" data-label="db/seeds.rb" data-lang="ruby">
+        <pre><code>products = [
+  { name: "Live T-Shirt", sku: "SHIRT-LIVE", price_cents: 59_000, active: true },
+  { name: "Canvas Bag", sku: "BAG-CANVAS", price_cents: 35_000, active: true },
+  { name: "Ceramic Mug", sku: "MUG-WHITE", price_cents: 29_000, active: true },
+  { name: "Sticker Pack", sku: "STICKER-01", price_cents: 9_000, active: true }
+]
+
+products.each do |attributes|
+  Product.find_or_initialize_by(sku: attributes[:sku]).update!(attributes)
+end
+
+fixed = FixedAmountPromotion.find_or_initialize_by(name: "ลดทันที 100 บาท")
+fixed.update!(active: true, amount_cents: 10_000)
+
+percentage = PercentagePromotion.find_or_initialize_by(name: "ลด 10% สูงสุด 200 บาท")
+percentage.update!(active: true, percentage: 10, maximum_discount_cents: 20_000)
+
+minimum = MinimumSpendPromotion.find_or_initialize_by(name: "ครบ 1,000 ลด 150 บาท")
+minimum.update!(active: true, minimum_spend_cents: 100_000, amount_cents: 15_000)
+
+order = Order.find_or_initialize_by(customer_name: "Alice Demo")
+order.status = :draft
+order.promotion = percentage
+
+[
+  [Product.find_by!(sku: "SHIRT-LIVE"), 2],
+  [Product.find_by!(sku: "BAG-CANVAS"), 1]
+].each do |product, quantity|
+  item = order.order_items.detect { |row| row.product_id == product.id } ||
+         order.order_items.build(product: product)
+  item.quantity = quantity
+  item.unit_price_cents = product.price_cents
+end
+
+order.recalculate_totals
+order.save!
+
+puts "Seed complete: #{Product.count} products, #{Promotion.count} promotions, #{Order.count} order"</code></pre>
+      </div>
+    </section>
+
+    <section id="try">
+      <div class="step-heading">
+        <span class="step-number">7</span>
+        <div><h2>ทดลองใช้งานและ Challenge</h2><p>รันแอป ตรวจ CRUD แล้วเพิ่ม Promotion ชนิดใหม่</p></div>
+      </div>
+
+      <div class="code-block" data-label="Command Prompt · Seed และ Run Server">
+        <pre><code>bundle exec rails db:seed
+bundle exec rails server</code></pre>
+      </div>
+      <p>เปิด <a href="http://localhost:3000" target="_blank" rel="noreferrer">http://localhost:3000</a></p>
+
+      <h3>7.1 สิ่งที่ต้องทดลอง</h3>
+      <div class="checklist">
+        <label class="check"><input data-check="try-product" type="checkbox"><span>สร้าง แก้ไข และดู Product</span></label>
+        <label class="check"><input data-check="try-promotion" type="checkbox"><span>สร้างและแก้ Promotion แต่ไม่เปลี่ยน STI type หลังสร้าง</span></label>
+        <label class="check"><input data-check="try-order" type="checkbox"><span>สร้าง Order ที่มีสินค้าสองชนิด</span></label>
+        <label class="check"><input data-check="try-remove" type="checkbox"><span>ลบ OrderItem หนึ่งรายการผ่าน Edit Order</span></label>
+        <label class="check"><input data-check="try-snapshot" type="checkbox"><span>แก้ราคา Product แล้วตรวจว่า OrderItem เดิมยังใช้ราคา snapshot</span></label>
+      </div>
+
+      <table class="result-table">
+        <thead><tr><th>Subtotal</th><th>Promotion</th><th>Discount</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr><td>฿1,530.00</td><td>Fixed 100</td><td>฿100.00</td><td>฿1,430.00</td></tr>
+          <tr><td>฿1,530.00</td><td>10% สูงสุด 200</td><td>฿153.00</td><td>฿1,377.00</td></tr>
+          <tr><td>฿1,530.00</td><td>ครบ 1,000 ลด 150</td><td>฿150.00</td><td>฿1,380.00</td></tr>
+        </tbody>
+      </table>
+
+      <h3>7.2 Bonus: Rails Console</h3>
+      <div class="code-block" data-label="Command Prompt แล้วพิมพ์ใน Rails Console">
+        <pre><code>bundle exec rails console
+
+order = Order.first
+Promotion.all.each do |promotion|
+  puts "#{promotion.class}: #{promotion.discount_for(order)}"
+end
+
+exit</code></pre>
+      </div>
+
+      <h3>7.3 Challenge: QuantityDiscountPromotion</h3>
+      <div class="note">
+        <strong>โจทย์</strong>
+        เมื่อจำนวนสินค้ารวมตั้งแต่ 3 ชิ้น ให้ลด 20% โดยห้ามเพิ่ม <code>if promotion.type</code> ใน Order หรือ Controller
+      </div>
+      <ul>
+        <li>2 ชิ้น → ส่วนลด 0</li>
+        <li>3 ชิ้น → ลด 20%</li>
+        <li>Promotion inactive → ส่วนลด 0</li>
+      </ul>
+
+      <details>
+        <summary>เปิดเฉลยเมื่อทำด้วยตัวเองครบ 12 นาที</summary>
+        <div class="details-body">
+          <p>เพิ่ม <code>QuantityDiscountPromotion</code> ใน <code>TYPES</code> และ <code>TYPE_LABELS</code> ของ Parent class แล้วสร้างไฟล์นี้:</p>
+          <div class="code-block" data-label="app/models/quantity_discount_promotion.rb" data-lang="ruby">
+            <pre><code>class QuantityDiscountPromotion &lt; Promotion
+  validates :minimum_quantity,
+            numericality: { only_integer: true, greater_than: 0 }
+  validates :percentage,
+            numericality: {
+              only_integer: true,
+              greater_than: 0,
+              less_than_or_equal_to: 100
+            }
+
+  def rule_summary
+    "ซื้อ #{minimum_quantity} ชิ้นขึ้นไป ลด #{percentage}%"
+  end
+
+  protected
+
+  def eligible?(order)
+    super &amp;&amp; order.total_quantity &gt;= minimum_quantity
+  end
+
+  private
+
+  def calculate_discount(order)
+    order.subtotal_cents * percentage / 100
+  end
+end</code></pre>
+          </div>
+          <div class="code-block" data-label="Command Prompt · สร้าง Promotion ตัวอย่าง">
+            <pre><code>bundle exec rails runner "p = QuantityDiscountPromotion.find_or_initialize_by(name: 'ซื้อ 3 ชิ้น ลด 20%'); p.update!(active: true, minimum_quantity: 3, percentage: 20)"</code></pre>
+          </div>
+          <div class="warning"><strong>อย่าลืม</strong>เพิ่มชื่อ class ใน <code>Promotion::TYPES</code> และ label ใน <code>TYPE_LABELS</code> แต่ไม่ต้องแก้ <code>Order#recalculate_totals</code></div>
+        </div>
+      </details>
+
+      <h3>Final Self-check</h3>
+      <div class="checklist">
+        <label class="check"><input data-check="final-env" type="checkbox"><span>Ruby, Rails และ Database เชื่อมต่อสำเร็จ</span></label>
+        <label class="check"><input data-check="final-crud" type="checkbox"><span>Product, Promotion และ Order CRUD ใช้งานได้</span></label>
+        <label class="check"><input data-check="final-total" type="checkbox"><span>ยอดตัวอย่างตรงกับตาราง</span></label>
+        <label class="check"><input data-check="final-oop" type="checkbox"><span>อธิบายได้ว่า Polymorphism เกิดที่ <code>discount_for</code> อย่างไร</span></label>
+      </div>
+      <div class="expected"><strong>คำถามก่อนจบ</strong>ทำไม Order ไม่ต้องรู้ว่า Promotion เป็น subclass ใด และเมื่อ business rules ซับซ้อนขึ้น คุณจะเลือก STI หรือ Composition เพราะอะไร?</div>
+    </section>
+
+    <section class="appendix" id="appendix">
+      <h2>Appendix</h2>
+      <p>เปิดหัวข้อเหล่านี้เมื่อพบปัญหา หรือต้องการศึกษาเพิ่มหลัง Workshop</p>
+
+      <details>
+        <summary>A. Windows Troubleshooting</summary>
+        <div class="details-body">
+          <table class="result-table">
+            <thead><tr><th>อาการ</th><th>แนวทางแก้</th></tr></thead>
+            <tbody>
+              <tr><td><code>ruby is not recognized</code></td><td>ปิด terminal แล้วเปิด “Start Command Prompt with Ruby”; ตรวจ <code>where ruby</code></td></tr>
+              <tr><td><code>rails is not recognized</code></td><td>เปิด terminal ใหม่ แล้วรันคำสั่งติดตั้ง Rails exact version อีกครั้ง</td></tr>
+              <tr><td><code>Could not compile mysql2</code></td><td>รัน <code>ridk install</code> เลือก 1,3 แล้วรัน <code>bundle install</code></td></tr>
+              <tr><td><code>Can't connect ... 10061</code></td><td>Start MySQL ใน XAMPP และตรวจ port ใน <code>database.yml</code></td></tr>
+              <tr><td><code>Access denied</code></td><td>ตรวจ username/password/host และรัน GRANT ใหม่</td></tr>
+              <tr><td><code>ActiveRecord::SubclassNotFound</code></td><td>ค่า <code>type</code> ต้องตรงกับ class และชื่อไฟล์</td></tr>
+              <tr><td><code>Address already in use</code></td><td>ใช้ <code>bundle exec rails server -p 3001</code></td></tr>
+            </tbody>
+          </table>
+          <div class="code-block" data-label="mysql2 fallback · ใช้เมื่อวิธีปกติไม่ผ่าน">
+            <pre><code>ridk install
+ridk exec pacman -S mingw-w64-ucrt-x86_64-libmariadbclient
+bundle install</code></pre>
+          </div>
+          <div class="danger"><strong>อย่าปิดระบบป้องกันทั้งเครื่อง</strong>ไม่ควรปิด Firewall, Antivirus หรือ UAC ทั้งระบบ หาก policy ของห้องบล็อก installer ให้ขอความช่วยเหลือจากผู้ดูแลเครื่อง</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>B. Strong Parameters สำหรับ Promotion CRUD</summary>
+        <div class="details-body">
+          <div class="code-block" data-label="app/controllers/promotions_controller.rb · private method" data-lang="ruby">
+            <pre><code>def promotion_params
+  params.require(:promotion).permit(
+    :name,
+    :type,
+    :active,
+    :amount_cents,
+    :percentage,
+    :minimum_spend_cents,
+    :maximum_discount_cents,
+    :minimum_quantity
+  )
+end</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>C. Optional Minitest</summary>
+        <div class="details-body">
+          <div class="code-block" data-label="test/models/promotion_test.rb" data-lang="ruby">
+            <pre><code>require "test_helper"
+
+class PromotionTest &lt; ActiveSupport::TestCase
+  FakeOrder = Struct.new(:subtotal_cents, :total_quantity)
+
+  test "fixed amount never exceeds subtotal" do
+    promotion = FixedAmountPromotion.new(active: true, amount_cents: 10_000)
+    assert_equal 5_000, promotion.discount_for(FakeOrder.new(5_000, 1))
+  end
+
+  test "percentage respects maximum discount" do
+    promotion = PercentagePromotion.new(
+      active: true,
+      percentage: 10,
+      maximum_discount_cents: 20_000
+    )
+    assert_equal 20_000, promotion.discount_for(FakeOrder.new(300_000, 1))
+  end
+
+  test "minimum spend checks eligibility" do
+    promotion = MinimumSpendPromotion.new(
+      active: true,
+      minimum_spend_cents: 100_000,
+      amount_cents: 15_000
+    )
+    assert_equal 0, promotion.discount_for(FakeOrder.new(99_900, 1))
+    assert_equal 15_000, promotion.discount_for(FakeOrder.new(100_000, 1))
+  end
+end</code></pre>
+          </div>
+          <div class="code-block" data-label="Command Prompt · Run Test">
+            <pre><code>bundle exec rails test test/models/promotion_test.rb</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>D. STI vs Strategy ใน Production</summary>
+        <div class="details-body">
+          <table class="result-table">
+            <thead><tr><th>STI</th><th>Composition / Strategy</th></tr></thead>
+            <tbody>
+              <tr><td>เห็น inheritance ชัดและเริ่มเร็ว</td><td>แยก persistence ออกจาก algorithm</td></tr>
+              <tr><td>เหมาะเมื่อชนิดน้อยและ fields ใกล้กัน</td><td>เหมาะเมื่อ condition/reward นำมาประกอบกันหลายแบบ</td></tr>
+              <tr><td>ผูกชื่อ class กับคอลัมน์ <code>type</code></td><td>มักเก็บ <code>kind</code> และเลือก calculator ผ่าน registry</td></tr>
+              <tr><td>อาจมี nullable columns จำนวนมาก</td><td>มี plumbing มากกว่า แต่ลด class explosion</td></tr>
+            </tbody>
+          </table>
+          <p>ระบบจริงยังต้องคิดเรื่อง stacking, campaign period, usage limit, customer segment, idempotency และ concurrent redemption ซึ่งจงใจไม่รวมใน Workshop นี้</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>E. Reset Workshop Database</summary>
+        <div class="details-body">
+          <div class="danger"><strong>คำสั่งนี้ลบข้อมูล</strong>ตรวจว่า <code>database.yml</code> ชี้ไป <code>promotion_playground_development</code> ก่อนรัน</div>
+          <div class="code-block" data-label="Command Prompt · Reset เฉพาะ Workshop Database">
+            <pre><code>bundle exec rails db:drop db:create db:migrate db:seed</code></pre>
+          </div>
+          <p>ห้ามลบ <code>C:\xampp\mysql\data</code> เพราะอาจมี database อื่นของคุณอยู่</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>F. Official Sources และ Reference</summary>
+        <div class="details-body">
+          <ul>
+            <li><a href="https://rubyinstaller.org/downloads/archives/" target="_blank" rel="noreferrer">RubyInstaller Archives</a></li>
+            <li><a href="https://guides.rubyonrails.org/install_ruby_on_rails.html" target="_blank" rel="noreferrer">Rails: Install Ruby on Rails</a></li>
+            <li><a href="https://guides.rubyonrails.org/association_basics.html#single-table-inheritance-sti" target="_blank" rel="noreferrer">Rails: Single Table Inheritance</a></li>
+            <li><a href="https://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html" target="_blank" rel="noreferrer">Rails: Nested Attributes</a></li>
+            <li><a href="https://github.com/brianmario/mysql2" target="_blank" rel="noreferrer">mysql2 README</a></li>
+            <li><a href="https://www.apachefriends.org/faq_windows.html" target="_blank" rel="noreferrer">XAMPP FAQ for Windows</a></li>
+            <li><a href="https://docs.google.com/document/d/1pfIY6Ge48qrRURDitrvVVuSJLnr59lX_IVc0e51fE5o/edit?usp=sharing" target="_blank" rel="noreferrer">Workshop document ที่ใช้เป็น reference ด้านรูปแบบ</a></li>
+          </ul>
+          <p>เวอร์ชันในคู่มือตรวจสอบเมื่อ 29 กันยายน 2026 หากกลับมาใช้ภายหลังให้ตรวจ patch versions และ installer links อีกครั้ง</p>
+        </div>
+      </details>
+    </section>
+
+    <footer class="footer">
+      E-Commerce Promotion Engine · Ruby on Rails + OOP · Student Guide
+    </footer>
+  </main>
+
+  <button class="back-top" id="back-top" type="button" aria-label="กลับไปด้านบน">↑ ด้านบน</button>
+
+  <script>
+    (() => {
+      const copyText = async (text) => {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      };
+
+      document.querySelectorAll(".code-block").forEach((block) => {
+        const bar = document.createElement("div");
+        bar.className = "code-bar";
+        const label = document.createElement("span");
+        label.className = "code-label";
+        label.textContent = block.dataset.label || "Code";
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "copy-button";
+        button.textContent = "Copy";
+        button.setAttribute("aria-label", `คัดลอก ${label.textContent}`);
+        button.addEventListener("click", async () => {
+          try {
+            const code = block.querySelector("code").textContent.replace(/^\n|\n$/g, "");
+            await copyText(code);
+            button.textContent = "Copied ✓";
+            button.classList.add("copied");
+            setTimeout(() => {
+              button.textContent = "Copy";
+              button.classList.remove("copied");
+            }, 1400);
+          } catch (_) {
+            button.textContent = "Copy failed";
+          }
+        });
+        bar.append(label, button);
+        block.prepend(bar);
+      });
+
+      const storageKey = "ecommerce-oop-workshop-checks";
+      const load = () => {
+        try { return JSON.parse(localStorage.getItem(storageKey) || "{}"); }
+        catch (_) { return {}; }
+      };
+      const saved = load();
+      document.querySelectorAll("input[data-check]").forEach((input) => {
+        input.checked = Boolean(saved[input.dataset.check]);
+        input.addEventListener("change", () => {
+          const state = load();
+          state[input.dataset.check] = input.checked;
+          try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (_) {}
+        });
+      });
+      document.getElementById("reset-checks").addEventListener("click", () => {
+        document.querySelectorAll("input[data-check]").forEach((input) => { input.checked = false; });
+        try { localStorage.removeItem(storageKey); } catch (_) {}
+      });
+
+      const progress = document.getElementById("reading-progress");
+      const backTop = document.getElementById("back-top");
+      const updateScrollUi = () => {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const percent = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+        progress.style.width = `${Math.min(100, percent)}%`;
+        backTop.classList.toggle("visible", window.scrollY > 700);
+      };
+      window.addEventListener("scroll", updateScrollUi, { passive: true });
+      updateScrollUi();
+      backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+      document.getElementById("print").addEventListener("click", () => window.print());
+    })();
+  </script>
+</body>
+</html>
