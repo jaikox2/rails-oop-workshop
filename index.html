@@ -488,47 +488,20 @@
       <div class="code-block" data-kind="command" data-label="Command Prompt · 2/2 Open MariaDB Shell">
         <pre><code>"C:\xampp\mysql\bin\mysql.exe" -u root</code></pre>
       </div>
-      <div class="note"><strong>ถ้า root มีรหัสผ่าน</strong>เปลี่ยนคำสั่งเข้าสู่ฐานข้อมูลเป็น <code>"C:\xampp\mysql\bin\mysql.exe" -u root -p</code> แล้วกรอกรหัสผ่านเมื่อระบบถาม</div>
-      <p>เมื่อเห็น prompt <code>MariaDB [(none)]&gt;</code> ให้วาง SQL ด้านล่างเพื่อสร้าง local user และกำหนดสิทธิ์ เราจะ <strong>ยังไม่สร้าง database ในขั้นนี้</strong> เพราะจะให้ Rails สร้างด้วย <code>db:create</code> ในหัวข้อ 2.6:</p>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 1/9 Create User localhost">
-        <pre><code>CREATE USER IF NOT EXISTS 'promo_user'@'localhost'
-  IDENTIFIED BY 'promo_pass_2026';</code></pre>
+      <div class="note"><strong>ค่าเริ่มต้นของ XAMPP</strong>Workshop นี้ใช้ MySQL/MariaDB user <code>root</code> และ password ว่างตามค่า default ของ XAMPP จึงไม่ต้องสร้าง user หรือกำหนด GRANT เพิ่ม</div>
+      <div class="note"><strong>ถ้าเครื่องของคุณตั้งรหัสผ่าน root ไว้แล้ว</strong>เปลี่ยนคำสั่งเข้าสู่ฐานข้อมูลเป็น <code>"C:\xampp\mysql\bin\mysql.exe" -u root -p</code> และตั้ง environment variable <code>PROMO_DB_PASSWORD</code> ก่อนรัน Rails commands</div>
+      <p>เมื่อเห็น prompt <code>MariaDB [(none)]&gt;</code> ให้ตรวจ user และ version แล้วออกจาก shell เราจะให้ Rails สร้าง development/test databases ด้วย <code>db:create</code> ในหัวข้อ 2.6:</p>
+      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 1/2 Check Current User and Version">
+        <pre><code>SELECT USER(), VERSION();</code></pre>
       </div>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 2/9 Create User 127.0.0.1">
-        <pre><code>CREATE USER IF NOT EXISTS 'promo_user'@'127.0.0.1'
-  IDENTIFIED BY 'promo_pass_2026';</code></pre>
-      </div>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 3/9 Grant Development localhost">
-        <pre><code>GRANT ALL PRIVILEGES ON promotion_playground_development.*
-  TO 'promo_user'@'localhost';</code></pre>
-      </div>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 4/9 Grant Test localhost">
-        <pre><code>GRANT ALL PRIVILEGES ON promotion_playground_test.*
-  TO 'promo_user'@'localhost';</code></pre>
-      </div>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 5/9 Grant Development 127.0.0.1">
-        <pre><code>GRANT ALL PRIVILEGES ON promotion_playground_development.*
-  TO 'promo_user'@'127.0.0.1';</code></pre>
-      </div>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 6/9 Grant Test 127.0.0.1">
-        <pre><code>GRANT ALL PRIVILEGES ON promotion_playground_test.*
-  TO 'promo_user'@'127.0.0.1';</code></pre>
-      </div>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 7/9 Flush Privileges">
-        <pre><code>FLUSH PRIVILEGES;</code></pre>
-      </div>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 8/9 Show Grants">
-        <pre><code>SHOW GRANTS FOR 'promo_user'@'127.0.0.1';</code></pre>
-      </div>
-      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 9/9 Exit">
+      <div class="code-block" data-kind="command" data-label="MariaDB Shell · 2/2 Exit">
         <pre><code>EXIT;</code></pre>
       </div>
-      <div class="note"><strong>ทำไม Grant ก่อนสร้าง Database ได้?</strong>MariaDB/MySQL เก็บสิทธิ์ระดับ <code>database_name.*</code> ไว้ล่วงหน้าได้ และสิทธิ์ <code>ALL PRIVILEGES</code> ระดับนี้รวม CREATE/DROP สำหรับ database ชื่อนั้น Rails จึงสร้างได้เฉพาะสอง databases ของ Workshop</div>
-      <div class="danger"><strong>Development only</strong>User/password นี้ใช้เฉพาะในเครื่อง Workshop ห้ามใช้กับ production หรือเปิด XAMPP ให้ Internet เข้าถึง</div>
+      <div class="danger"><strong>Local development only</strong><code>root</code> ที่ไม่มี password สะดวกสำหรับห้อง Workshop แต่ไม่ปลอดภัยสำหรับ production ห้ามเปิด XAMPP ให้เข้าถึงจาก Internet และห้ามนำ configuration นี้ไปใช้กับระบบจริง</div>
       <div class="checklist">
         <label class="check"><input data-check="env-ruby" type="checkbox"><span>Ruby และ Bundler ทำงาน</span></label>
         <label class="check"><input data-check="env-rails" type="checkbox"><span>Rails แสดงเวอร์ชัน 8.1.4</span></label>
-        <label class="check"><input data-check="env-db" type="checkbox"><span>MySQL ใน XAMPP เป็นสีเขียว และ <code>promo_user</code> มี grants สำหรับสอง databases</span></label>
+        <label class="check"><input data-check="env-db" type="checkbox"><span>MySQL ใน XAMPP เป็นสีเขียว และ login ด้วย <code>root</code> ได้</span></label>
       </div>
     </section>
 
@@ -555,7 +528,7 @@
         <pre><code>cd /d C:\rails-workshop</code></pre>
       </div>
       <div class="code-block" data-kind="command" data-label="Command Prompt · 3/4 Create Rails Project">
-        <pre><code>rails _8.1.4_ new promotion_playground --database=mysql</code></pre>
+        <pre><code>rails new promotion_playground --database=mysql</code></pre>
       </div>
       <div class="code-block" data-kind="command" data-label="Command Prompt · 4/4 Enter Rails Project">
         <pre><code>cd promotion_playground</code></pre>
@@ -592,8 +565,8 @@ gem "mysql2", "0.5.7"</code></pre>
   encoding: utf8mb4
   collation: utf8mb4_unicode_ci
   pool: &lt;%= ENV.fetch("RAILS_MAX_THREADS", 5) %&gt;
-  username: &lt;%= ENV.fetch("PROMO_DB_USER", "promo_user") %&gt;
-  password: &lt;%= ENV.fetch("PROMO_DB_PASSWORD", "promo_pass_2026") %&gt;
+  username: &lt;%= ENV.fetch("PROMO_DB_USER", "root") %&gt;
+  password: &lt;%= ENV.fetch("PROMO_DB_PASSWORD", "") %&gt;
   host: &lt;%= ENV.fetch("PROMO_DB_HOST", "127.0.0.1") %&gt;
   port: &lt;%= ENV.fetch("PROMO_DB_PORT", 3306) %&gt;
 
@@ -3942,7 +3915,6 @@ end</code></pre>
             <li><a href="https://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html" target="_blank" rel="noreferrer">Rails: Nested Attributes</a></li>
             <li><a href="https://github.com/brianmario/mysql2" target="_blank" rel="noreferrer">mysql2 README</a></li>
             <li><a href="https://www.apachefriends.org/faq_windows.html" target="_blank" rel="noreferrer">XAMPP FAQ for Windows</a></li>
-            <li><a href="https://dev.mysql.com/doc/refman/8.4/en/grant.html" target="_blank" rel="noreferrer">MySQL Reference — GRANT Statement</a></li>
             <li><a href="https://docs.google.com/document/d/1pfIY6Ge48qrRURDitrvVVuSJLnr59lX_IVc0e51fE5o/edit?usp=sharing" target="_blank" rel="noreferrer">Workshop document ที่ใช้เป็น reference ด้านรูปแบบ</a></li>
           </ul>
           <p>เวอร์ชันในคู่มือตรวจสอบเมื่อ 29 กันยายน 2026 หากกลับมาใช้ภายหลังให้ตรวจ patch versions และ installer links อีกครั้ง</p>
