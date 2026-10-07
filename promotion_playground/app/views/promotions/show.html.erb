@@ -1,0 +1,25 @@
+<section class="page-shell" aria-labelledby="promotion-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Promotion detail</p>
+      <h1 id="promotion-title" class="page-title">รายละเอียดโปรโมชั่น</h1>
+      <p class="page-subtitle">ตรวจสอบประเภท เงื่อนไข และสถานะของ <%= @promotion.name %></p>
+    </div>
+  </div>
+
+  <div class="detail-layout">
+    <%= render @promotion, detail: true %>
+  </div>
+
+  <div class="action-row" aria-label="การทำงานกับโปรโมชั่น">
+    <%= link_to "แก้ไขโปรโมชั่น", edit_promotion_path(@promotion), class: "button button-primary" %>
+    <%= link_to "กลับไปรายการโปรโมชั่น", promotions_path, class: "button button-ghost" %>
+    <%= button_to "ลบโปรโมชั่น", @promotion,
+      method: :delete,
+      form: {
+        data: { turbo_confirm: "ยืนยันการลบโปรโมชั่นนี้?" },
+        onsubmit: "return confirm('ยืนยันการลบโปรโมชั่นนี้?')"
+      },
+      class: "button button-danger" %>
+  </div>
+</section>

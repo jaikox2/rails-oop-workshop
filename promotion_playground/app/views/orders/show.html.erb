@@ -1,0 +1,109 @@
+<% status_labels = { "draft" => "ฉบับร่าง", "confirmed" => "ยืนยันแล้ว", "cancelled" => "ยกเลิก" } %>
+
+<section class="page-shell" aria-labelledby="order-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Order detail</p>
+      <h1 id="order-title" class="page-title">ออเดอร์ #<%= @order.id %></h1>
+      <p class="page-subtitle">รายละเอียดการสั่งซื้อของ <%= @order.customer_name %> และผลการคำนวณส่วนลด</p>
+    </div>
+  </div>
+
+  <div class="detail-layout">
+    <article class="detail-card" aria-labelledby="order-overview-title">
+      <header class="card-header">
+        <div class="card-topline">
+          <span class="badge badge-sku">ORDER #<%= @order.id %></span>
+          <span class="badge badge-<%= @order.status %>"><%= status_labels.fetch(@order.status, @order.status.humanize) %></span>
+        </div>
+        <h2 id="order-overview-title" class="card-title"><%= @order.customer_name %></h2>
+        <p class="card-copy">สร้างเมื่อ <%= @order.created_at.strftime("%d/%m/%Y เวลา %H:%M") %></p>
+      </header>
+
+      <div class="card-main">
+        <dl class="definition-list">
+          <div class="definition-row">
+            <dt class="definition-label">สถานะออเดอร์</dt>
+            <dd class="definition-value"><%= status_labels.fetch(@order.status, @order.status.humanize) %></dd>
+          </div>
+          <div class="definition-row">
+            <dt class="definition-label">โปรโมชั่น</dt>
+            <dd class="definition-value"><%= @order.promotion&.name || "ไม่ใช้โปรโมชั่น" %></dd>
+          </div>
+          <div class="definition-row">
+            <dt class="definition-label">จำนวนสินค้ารวม</dt>
+            <dd class="definition-value"><%= @order.total_quantity %> ชิ้น</dd>
+          </div>
+        </dl>
+      </div>
+    </article>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <div>
+        <h2 class="table-title">สินค้าในออเดอร์</h2>
+        <p class="table-hint">ราคาต่อหน่วยเป็น snapshot ที่บันทึกไว้กับรายการสั่งซื้อ</p>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="responsive-table">
+        <caption class="sr-only">สินค้า ราคาต่อหน่วย ณ เวลาที่บันทึก จำนวน และยอดย่อย</caption>
+        <thead>
+          <tr>
+            <th scope="col">สินค้า</th>
+            <th scope="col">ราคาต่อหน่วย</th>
+            <th scope="col">จำนวน</th>
+            <th scope="col">ยอดย่อย</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @order.order_items.each do |item| %>
+            <tr>
+              <td data-label="สินค้า">
+                <span class="cell-primary"><%= item.product.name %></span>
+                <span class="cell-secondary">SKU <%= item.product.sku %></span>
+              </td>
+              <td data-label="ราคาต่อหน่วย" class="money"><%= money(item.unit_price_cents) %></td>
+              <td data-label="จำนวน"><%= item.quantity %> ชิ้น</td>
+              <td data-label="ยอดย่อย" class="money"><%= money(item.subtotal_cents) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <aside class="summary-card" aria-labelledby="order-summary-title">
+    <h2 id="order-summary-title" class="summary-heading">สรุปยอดออเดอร์</h2>
+    <p class="summary-row">
+      <span class="summary-label">ยอดก่อนส่วนลด</span>
+      <strong class="summary-value money"><%= money(@order.subtotal_cents) %></strong>
+    </p>
+    <p class="summary-row">
+      <span class="summary-label">โปรโมชั่น</span>
+      <strong class="summary-value"><%= @order.promotion&.name || "ไม่ใช้โปรโมชั่น" %></strong>
+    </p>
+    <p class="summary-row discount">
+      <span class="summary-label">ส่วนลด</span>
+      <strong class="summary-value money">− <%= money(@order.discount_cents) %></strong>
+    </p>
+    <p class="summary-row grand-total">
+      <span class="summary-label">ยอดสุทธิ</span>
+      <strong class="summary-value money"><%= money(@order.total_cents) %></strong>
+    </p>
+  </aside>
+
+  <div class="action-row" aria-label="การทำงานกับออเดอร์">
+    <%= link_to "แก้ไขออเดอร์", edit_order_path(@order), class: "button button-primary" %>
+    <%= link_to "กลับไปรายการออเดอร์", orders_path, class: "button button-ghost" %>
+    <%= button_to "ลบออเดอร์", @order,
+      method: :delete,
+      form: {
+        data: { turbo_confirm: "ลบออเดอร์นี้?" },
+        onsubmit: "return confirm('ลบออเดอร์นี้?')"
+      },
+      class: "button button-danger" %>
+  </div>
+</section>

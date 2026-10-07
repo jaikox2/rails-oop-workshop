@@ -1,0 +1,25 @@
+<section class="page-shell" aria-labelledby="products-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Product catalog</p>
+      <h1 id="products-title" class="page-title">สินค้า</h1>
+      <p class="page-subtitle">จัดการรายการสินค้า ราคา และสถานะพร้อมขายสำหรับนำไปสร้างออเดอร์</p>
+    </div>
+    <%= link_to "เพิ่มสินค้า", new_product_path, class: "button button-primary" %>
+  </div>
+
+  <% if @products.any? %>
+    <div id="products" class="resource-grid">
+      <% @products.each do |product| %>
+        <%= render product, show_actions: true %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <div class="empty-icon" aria-hidden="true">P</div>
+      <h2 class="empty-title">ยังไม่มีสินค้า</h2>
+      <p class="empty-copy">เริ่มสร้างแค็ตตาล็อกด้วยสินค้าชิ้นแรก แล้วจึงนำไปเพิ่มในออเดอร์ได้</p>
+      <%= link_to "สร้างสินค้าชิ้นแรก", new_product_path, class: "button button-primary" %>
+    </div>
+  <% end %>
+</section>

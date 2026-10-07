@@ -1,0 +1,25 @@
+<section class="page-shell" aria-labelledby="promotions-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Promotion rules</p>
+      <h1 id="promotions-title" class="page-title">โปรโมชั่น</h1>
+      <p class="page-subtitle">สร้างและจัดการกติกาส่วนลดสำหรับทดลองคำนวณกับออเดอร์</p>
+    </div>
+    <%= link_to "เพิ่มโปรโมชั่น", new_promotion_path, class: "button button-primary" %>
+  </div>
+
+  <% if @promotions.any? %>
+    <div id="promotions" class="resource-grid">
+      <% @promotions.each do |promotion| %>
+        <%= render promotion, show_actions: true %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <div class="empty-icon" aria-hidden="true">%</div>
+      <h2 class="empty-title">ยังไม่มีโปรโมชั่น</h2>
+      <p class="empty-copy">เริ่มจากส่วนลดแบบจำนวนคงที่ เปอร์เซ็นต์ หรือยอดซื้อขั้นต่ำ แล้วทดลองใช้กับออเดอร์</p>
+      <%= link_to "สร้างโปรโมชั่นแรก", new_promotion_path, class: "button button-primary" %>
+    </div>
+  <% end %>
+</section>

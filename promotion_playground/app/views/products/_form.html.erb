@@ -1,0 +1,71 @@
+<%= form_with(model: product, class: "form-card") do |form| %>
+  <div class="form-intro">
+    <h2 class="section-title"><%= product.persisted? ? "ข้อมูลสินค้า" : "สร้างสินค้าใหม่" %></h2>
+    <p class="section-copy">ชื่อและ SKU ใช้ระบุสินค้า ส่วนราคาเก็บเป็นหน่วยสตางค์ตามโครงสร้างข้อมูลเดิม</p>
+  </div>
+
+  <% if product.errors.any? %>
+    <div class="errors error-panel" role="alert">
+      <strong class="error-title">บันทึกสินค้าไม่ได้ — พบข้อผิดพลาด <%= product.errors.count %> รายการ</strong>
+      <ul>
+        <% product.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">ข้อมูลพื้นฐาน</span>
+      <span class="form-section-copy">กำหนดชื่อที่อ่านง่ายและ SKU ที่ไม่ซ้ำกัน</span>
+    </legend>
+
+    <div class="field-grid">
+      <div class="field">
+        <%= form.label :name do %>
+          ชื่อสินค้า <span class="required-marker" aria-hidden="true">*</span>
+        <% end %>
+        <%= form.text_field :name, required: true, placeholder: "เช่น เสื้อยืด Workshop" %>
+        <p class="field-hint">ชื่อนี้จะแสดงในรายการสินค้าและออเดอร์</p>
+      </div>
+
+      <div class="field">
+        <%= form.label :sku, "SKU / รหัสสินค้า" %>
+        <%= form.text_field :sku, required: true, placeholder: "เช่น TSHIRT-001", spellcheck: false %>
+        <p class="field-hint">ควรเป็นรหัสสั้น กระชับ และไม่ซ้ำกับสินค้าอื่น</p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">ราคาและการวางขาย</span>
+      <span class="form-section-copy">ราคาจะถูกบันทึกเป็น snapshot เมื่อสร้างหรืออัปเดตออเดอร์</span>
+    </legend>
+
+    <div class="field-grid">
+      <div class="field">
+        <%= form.label :price_cents, "ราคา (สตางค์)" %>
+        <%= form.number_field :price_cents, min: 0, step: 1, inputmode: "numeric", placeholder: "เช่น 12900" %>
+        <p class="field-hint">ตัวอย่าง 12,900 สตางค์ เท่ากับ ฿129.00</p>
+      </div>
+
+      <div class="field">
+        <span class="field-label">สถานะสินค้า</span>
+        <div class="toggle-field">
+          <%= form.check_box :active, class: "toggle-input" %>
+          <%= form.label :active, class: "toggle-label" do %>
+            <span class="toggle-title">เปิดขายสินค้า</span>
+            <span class="toggle-hint">สินค้าที่เปิดขายจะแสดงในตัวเลือกของออเดอร์</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <p class="form-actions-copy">ช่องที่มีเครื่องหมาย * จำเป็นต้องกรอกก่อนบันทึก</p>
+    <%= form.submit(product.persisted? ? "บันทึกการแก้ไข" : "สร้างสินค้า", class: "button button-primary") %>
+  </div>
+<% end %>

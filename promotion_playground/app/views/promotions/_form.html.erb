@@ -1,0 +1,136 @@
+<%= form_with(model: promotion, class: "form-card") do |form| %>
+  <div class="form-intro">
+    <h2 class="section-title"><%= promotion.persisted? ? "กติกาโปรโมชั่น" : "สร้างกติกาส่วนลด" %></h2>
+    <p class="section-copy">ฟอร์มนี้รองรับโปรโมชั่นทั้งสามประเภท โดยใช้เส้นทางและพารามิเตอร์ร่วมกันผ่าน Promotion</p>
+  </div>
+
+  <% if promotion.errors.any? %>
+    <div class="errors error-panel" role="alert">
+      <strong class="error-title">บันทึกโปรโมชั่นไม่ได้ — พบข้อผิดพลาด <%= promotion.errors.count %> รายการ</strong>
+      <ul>
+        <% promotion.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">ข้อมูลพื้นฐาน</span>
+      <span class="form-section-copy">ตั้งชื่อ เลือกประเภทเมื่อสร้าง และกำหนดสถานะพร้อมใช้งาน</span>
+    </legend>
+
+    <div class="field-grid">
+      <div class="field">
+        <%= form.label :name do %>
+          ชื่อโปรโมชั่น <span class="required-marker" aria-hidden="true">*</span>
+        <% end %>
+        <%= form.text_field :name, required: true, placeholder: "เช่น Welcome Discount" %>
+        <p class="field-hint">ชื่อนี้จะแสดงในตัวเลือกโปรโมชั่นของออเดอร์</p>
+      </div>
+
+      <% if promotion.persisted? %>
+        <div class="field">
+          <%= form.hidden_field :type %>
+          <span class="field-label">ประเภทโปรโมชั่น</span>
+          <div class="immutable-field">
+            <span class="immutable-label">ไม่สามารถเปลี่ยนหลังสร้าง</span>
+            <span class="immutable-value">
+              <span><%= promotion.type_label %></span>
+              <span class="badge badge-type">STI</span>
+            </span>
+          </div>
+          <p class="field-hint">ประเภทถูกเก็บใน STI และคงเดิมเพื่อรักษาพฤติกรรมการคำนวณ</p>
+        </div>
+      <% else %>
+        <div class="field">
+          <%= form.label :type do %>
+            ประเภทโปรโมชั่น <span class="required-marker" aria-hidden="true">*</span>
+          <% end %>
+          <%= form.select :type,
+            Promotion::TYPES.map { |type| [Promotion::TYPE_LABELS.fetch(type), type] },
+            { prompt: "เลือกประเภทโปรโมชั่น" },
+            required: true %>
+          <p class="field-hint">เลือกให้ตรงกับกลุ่มค่าที่ต้องการใช้ด้านล่าง</p>
+        </div>
+      <% end %>
+
+      <div class="field field-wide">
+        <span class="field-label">สถานะโปรโมชั่น</span>
+        <div class="toggle-field">
+          <%= form.check_box :active, class: "toggle-input" %>
+          <%= form.label :active, class: "toggle-label" do %>
+            <span class="toggle-title">เปิดใช้งานโปรโมชั่น</span>
+            <span class="toggle-hint">โปรโมชั่นที่เปิดใช้งานจะแสดงในตัวเลือกของออเดอร์</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">Fixed Amount — ส่วนลดจำนวนคงที่</span>
+      <span class="form-section-copy">ใช้กับ Fixed Amount และใช้เป็นมูลค่าส่วนลดของ Minimum Spend</span>
+    </legend>
+
+    <div class="field">
+      <%= form.label :amount_cents, "มูลค่าส่วนลด (สตางค์)" %>
+      <%= form.number_field :amount_cents, min: 1, step: 1, inputmode: "numeric", placeholder: "เช่น 5000" %>
+      <p class="field-hint">ตัวอย่าง 5,000 สตางค์ เท่ากับส่วนลด ฿50.00 — เว้นว่างได้เมื่อใช้ Percentage</p>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">Percentage / Cap — เปอร์เซ็นต์และเพดาน</span>
+      <span class="form-section-copy">ใช้เมื่อเลือกประเภทลดเป็นเปอร์เซ็นต์ โดยเพดานส่วนลดไม่จำเป็นต้องระบุ</span>
+    </legend>
+
+    <div class="field-grid">
+      <div class="field">
+        <%= form.label :percentage, "เปอร์เซ็นต์ส่วนลด" %>
+        <%= form.number_field :percentage, min: 1, max: 100, step: 1, inputmode: "numeric", placeholder: "เช่น 15" %>
+        <p class="field-hint">กรอกจำนวนเต็มตั้งแต่ 1 ถึง 100</p>
+      </div>
+
+      <div class="field">
+        <%= form.label :maximum_discount_cents, "ลดสูงสุด (สตางค์)" %>
+        <%= form.number_field :maximum_discount_cents, min: 0, step: 1, inputmode: "numeric", placeholder: "เว้นว่างได้" %>
+        <p class="field-hint">กำหนดเพดานส่วนลด หรือเว้นว่างเพื่อไม่จำกัด</p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">Minimum Spend — ยอดซื้อขั้นต่ำ</span>
+      <span class="form-section-copy">ใช้ร่วมกับมูลค่าส่วนลดด้านบนเมื่อเลือกประเภทลดเมื่อซื้อถึงขั้นต่ำ</span>
+    </legend>
+
+    <div class="field">
+      <%= form.label :minimum_spend_cents, "ยอดซื้อขั้นต่ำ (สตางค์)" %>
+      <%= form.number_field :minimum_spend_cents, min: 1, step: 1, inputmode: "numeric", placeholder: "เช่น 100000" %>
+      <p class="field-hint">ส่วนลดจะมีผลเมื่อยอดรวมก่อนลดถึงค่านี้</p>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">Challenge — จำนวนสินค้าขั้นต่ำ</span>
+      <span class="form-section-copy">ฟิลด์สำหรับต่อยอดกติกาโปรโมชั่นใน workshop</span>
+    </legend>
+
+    <div class="field">
+      <%= form.label :minimum_quantity, "จำนวนสินค้าขั้นต่ำ" %>
+      <%= form.number_field :minimum_quantity, min: 1, step: 1, inputmode: "numeric", placeholder: "เช่น 3" %>
+      <p class="field-hint">ระบบปัจจุบันบันทึกค่านี้ไว้ แต่ยังไม่นำไปคำนวณส่วนลด</p>
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <p class="form-actions-copy">กรอกเฉพาะค่าที่เกี่ยวข้องกับประเภทที่เลือก ระบบจะตรวจสอบกติกาเมื่อบันทึก</p>
+    <%= form.submit(promotion.persisted? ? "บันทึกการแก้ไข" : "สร้างโปรโมชั่น", class: "button button-primary") %>
+  </div>
+<% end %>

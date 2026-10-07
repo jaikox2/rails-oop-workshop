@@ -1,0 +1,25 @@
+<section class="page-shell" aria-labelledby="product-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Product detail</p>
+      <h1 id="product-title" class="page-title">รายละเอียดสินค้า</h1>
+      <p class="page-subtitle">ตรวจสอบราคา รหัสสินค้า และสถานะการนำไปใช้งานของ <%= @product.name %></p>
+    </div>
+  </div>
+
+  <div class="detail-layout">
+    <%= render @product, detail: true %>
+  </div>
+
+  <div class="action-row" aria-label="การทำงานกับสินค้า">
+    <%= link_to "แก้ไขสินค้า", edit_product_path(@product), class: "button button-primary" %>
+    <%= link_to "กลับไปรายการสินค้า", products_path, class: "button button-ghost" %>
+    <%= button_to "ลบสินค้า", @product,
+      method: :delete,
+      form: {
+        data: { turbo_confirm: "ยืนยันการลบสินค้านี้?" },
+        onsubmit: "return confirm('ยืนยันการลบสินค้านี้?')"
+      },
+      class: "button button-danger" %>
+  </div>
+</section>

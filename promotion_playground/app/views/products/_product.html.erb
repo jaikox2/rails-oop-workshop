@@ -1,0 +1,37 @@
+<% detail = local_assigns.fetch(:detail, false) %>
+<% show_actions = local_assigns.fetch(:show_actions, false) %>
+
+<article id="<%= dom_id product %>" class="<%= detail ? 'detail-card' : 'resource-card' %>" aria-labelledby="<%= dom_id(product, :title) %>">
+  <header class="card-header">
+    <div class="card-topline">
+      <span class="badge badge-sku">SKU <%= product.sku %></span>
+      <span class="badge <%= product.active? ? 'badge-active' : 'badge-inactive' %>">
+        <%= product.active? ? "พร้อมขาย" : "ปิดการขาย" %>
+      </span>
+    </div>
+    <h2 id="<%= dom_id(product, :title) %>" class="card-title"><%= product.name %></h2>
+    <p class="card-copy">ข้อมูลสินค้าในแค็ตตาล็อก</p>
+  </header>
+
+  <div class="card-main">
+    <p class="money money-large"><%= money(product.price_cents) %></p>
+    <p class="money-caption">ราคาขายต่อหน่วย</p>
+
+    <dl class="definition-list">
+      <div class="definition-row">
+        <dt class="definition-label">รหัสสินค้า</dt>
+        <dd class="definition-value"><%= product.sku %></dd>
+      </div>
+      <div class="definition-row">
+        <dt class="definition-label">สถานะ</dt>
+        <dd class="definition-value"><%= product.active? ? "นำไปสร้างออเดอร์ได้" : "ไม่แสดงในตัวเลือกออเดอร์" %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <% if show_actions %>
+    <footer class="card-footer">
+      <%= link_to "ดูรายละเอียดสินค้า", product, class: "button button-secondary button-block" %>
+    </footer>
+  <% end %>
+</article>

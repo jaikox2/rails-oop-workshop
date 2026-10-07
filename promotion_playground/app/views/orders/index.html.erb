@@ -1,0 +1,68 @@
+<% status_labels = { "draft" => "ฉบับร่าง", "confirmed" => "ยืนยันแล้ว", "cancelled" => "ยกเลิก" } %>
+
+<section class="page-shell" aria-labelledby="orders-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Order workspace</p>
+      <h1 id="orders-title" class="page-title">ออเดอร์</h1>
+      <p class="page-subtitle">ทดลองจัดสินค้า ใช้โปรโมชั่น และตรวจสอบผลรวมที่ระบบคำนวณให้</p>
+    </div>
+    <%= link_to "สร้างออเดอร์", new_order_path, class: "button button-primary" %>
+  </div>
+
+  <% if @orders.any? %>
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <h2 class="table-title">รายการออเดอร์ทั้งหมด</h2>
+          <p class="table-hint">เรียงจากออเดอร์ที่สร้างล่าสุด</p>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="responsive-table">
+          <caption class="sr-only">รายการออเดอร์ ลูกค้า สถานะ โปรโมชั่น และยอดรวม</caption>
+          <thead>
+            <tr>
+              <th scope="col">ออเดอร์</th>
+              <th scope="col">ลูกค้า</th>
+              <th scope="col">สถานะ</th>
+              <th scope="col">โปรโมชั่น</th>
+              <th scope="col">ยอดรวม</th>
+              <th scope="col"><span class="sr-only">การทำงาน</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @orders.each do |order| %>
+              <tr>
+                <td data-label="ออเดอร์">
+                  <span class="cell-primary">#<%= order.id %></span>
+                  <span class="cell-secondary"><%= order.created_at.strftime("%d/%m/%Y") %></span>
+                </td>
+                <td data-label="ลูกค้า" class="cell-primary"><%= order.customer_name %></td>
+                <td data-label="สถานะ">
+                  <span class="badge badge-<%= order.status %>"><%= status_labels.fetch(order.status, order.status.humanize) %></span>
+                </td>
+                <td data-label="โปรโมชั่น"><%= order.promotion&.name || "ไม่ใช้โปรโมชั่น" %></td>
+                <td data-label="ยอดรวม" class="money"><%= money(order.total_cents) %></td>
+                <td data-label="การทำงาน" class="table-actions">
+                  <div class="action-row">
+                    <%= link_to "ดู", order, class: "button button-ghost button-small", aria: { label: "ดูออเดอร์ ##{order.id}" } %>
+                    <%= link_to "แก้ไข", edit_order_path(order), class: "button button-ghost button-small", aria: { label: "แก้ไขออเดอร์ ##{order.id}" } %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <div class="empty-icon" aria-hidden="true">O</div>
+      <h2 class="empty-title">ยังไม่มีออเดอร์</h2>
+      <p class="empty-copy">เลือกสินค้าอย่างน้อยหนึ่งรายการ แล้วทดลองใช้โปรโมชั่นเพื่อดูการคำนวณยอดรวม</p>
+      <%= link_to "สร้างออเดอร์แรก", new_order_path, class: "button button-primary" %>
+    </div>
+  <% end %>
+</section>

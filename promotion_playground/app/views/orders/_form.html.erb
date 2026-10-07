@@ -1,0 +1,137 @@
+<% status_labels = { "draft" => "ฉบับร่าง", "confirmed" => "ยืนยันแล้ว", "cancelled" => "ยกเลิก" } %>
+
+<%= form_with(model: order, class: "form-card") do |form| %>
+  <div class="form-intro">
+    <h2 class="section-title"><%= order.persisted? ? "ข้อมูลออเดอร์ ##{order.id}" : "ข้อมูลออเดอร์ใหม่" %></h2>
+    <p class="section-copy">ระบบจะคำนวณยอดย่อย ส่วนลด และยอดสุทธิจากรายการสินค้าที่บันทึก</p>
+  </div>
+
+  <% if order.errors.any? %>
+    <div class="errors error-panel" role="alert">
+      <strong class="error-title">บันทึกออเดอร์ไม่ได้ — พบข้อผิดพลาด <%= order.errors.count %> รายการ</strong>
+      <ul>
+        <% order.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">ลูกค้าและสถานะ</span>
+      <span class="form-section-copy">ข้อมูลหลักสำหรับติดตามออเดอร์ใน playground</span>
+    </legend>
+
+    <div class="field-grid">
+      <div class="field">
+        <%= form.label :customer_name do %>
+          ชื่อลูกค้า <span class="required-marker" aria-hidden="true">*</span>
+        <% end %>
+        <%= form.text_field :customer_name, required: true, autocomplete: "name", placeholder: "ระบุชื่อลูกค้า" %>
+        <p class="field-hint">ใช้ระบุเจ้าของออเดอร์ในหน้ารายการ</p>
+      </div>
+
+      <div class="field">
+        <%= form.label :status, "สถานะ" %>
+        <%= form.select :status, Order.statuses.keys.map { |status| [status_labels.fetch(status, status.humanize), status] } %>
+        <p class="field-hint">ฉบับร่างแก้ไขได้ตามปกติ ส่วนสถานะอื่นใช้จำลอง workflow</p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">โปรโมชั่น</span>
+      <span class="form-section-copy">เลือกได้หนึ่งโปรโมชั่นจากรายการที่กำลังเปิดใช้งาน</span>
+    </legend>
+
+    <div class="field">
+      <%= form.label :promotion_id, "โปรโมชั่นที่ใช้" %>
+      <%= form.select :promotion_id,
+        Promotion.active.map { |promotion| ["#{promotion.name} — #{promotion.rule_summary}", promotion.id] },
+        { include_blank: "ไม่ใช้โปรโมชั่น" } %>
+      <p class="field-hint">ระบบจะตรวจสอบเงื่อนไขและจำกัดส่วนลดไม่ให้เกินยอดก่อนลด</p>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend class="form-section-heading">
+      <span class="form-section-title">สินค้าในออเดอร์</span>
+      <span class="form-section-copy">เลือกสินค้าอย่างน้อยหนึ่งรายการ ช่องที่ไม่เลือกสินค้าจะไม่ถูกบันทึก</span>
+    </legend>
+
+    <div class="line-items">
+      <%= form.fields_for :order_items do |item_fields| %>
+        <div class="line-item-card">
+          <div class="line-item-header">
+            <span class="line-item-number">รายการที่ <%= item_fields.index.to_i + 1 %></span>
+            <span class="line-item-state"><%= item_fields.object.persisted? ? "บันทึกแล้ว" : "รายการใหม่" %></span>
+          </div>
+
+          <div class="line-item-grid">
+            <div class="field">
+              <%= item_fields.label :product_id, "สินค้า" %>
+              <%= item_fields.select :product_id,
+                Product.available.map { |product| ["#{product.name} — #{money(product.price_cents)}", product.id] },
+                { include_blank: "เลือกสินค้า" } %>
+              <p class="field-hint">ราคาปัจจุบันแสดงในตัวเลือก รายการใหม่หรือสินค้าที่เปลี่ยนจะบันทึกราคานี้เป็น snapshot ส่วนสินค้าเดิมยังคง snapshot เดิม</p>
+            </div>
+
+            <div class="field">
+              <%= item_fields.label :quantity, "จำนวน" %>
+              <%= item_fields.number_field :quantity, min: 1, step: 1, inputmode: "numeric", value: item_fields.object.quantity || 1 %>
+              <p class="field-hint">อย่างน้อย 1 ชิ้น</p>
+            </div>
+          </div>
+
+          <% if item_fields.object.persisted? %>
+            <div class="remove-item">
+              <div class="toggle-field">
+                <%= item_fields.check_box :_destroy, class: "toggle-input" %>
+                <%= item_fields.label :_destroy, class: "toggle-label" do %>
+                  <span class="toggle-title">ลบรายการนี้เมื่อบันทึก</span>
+                  <span class="toggle-hint">รายการที่เลือกจะไม่ถูกนำไปคำนวณยอดใหม่</span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <section class="form-section" aria-labelledby="calculated-totals-title">
+    <div class="form-section-heading">
+      <h3 id="calculated-totals-title" class="form-section-title">ยอดที่ระบบคำนวณ</h3>
+      <p class="form-section-copy">ค่าเหล่านี้เป็นแบบอ่านอย่างเดียวและจะคำนวณใหม่จากสินค้าและโปรโมชั่นเมื่อบันทึก</p>
+    </div>
+
+    <% if order.persisted? %>
+      <div class="readonly-summary">
+        <p class="readonly-summary-title">ยอดล่าสุดที่บันทึก</p>
+        <div class="readonly-summary-grid">
+          <div class="readonly-total">
+            <span>ยอดก่อนส่วนลด</span>
+            <strong><%= money(order.subtotal_cents) %></strong>
+          </div>
+          <div class="readonly-total">
+            <span>ส่วนลด</span>
+            <strong>− <%= money(order.discount_cents) %></strong>
+          </div>
+          <div class="readonly-total">
+            <span>ยอดสุทธิ</span>
+            <strong><%= money(order.total_cents) %></strong>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <p class="info-note"><span>ยอดรวมจะแสดงในหน้ารายละเอียดหลังสร้างออเดอร์สำเร็จ</span></p>
+    <% end %>
+  </section>
+
+  <div class="form-actions">
+    <p class="form-actions-copy">ราคาต่อหน่วยและยอดทั้งหมดไม่ได้รับค่าจากฟอร์มโดยตรง ระบบเป็นผู้คำนวณให้</p>
+    <%= form.submit(order.persisted? ? "บันทึกการแก้ไข" : "สร้างออเดอร์", class: "button button-primary") %>
+  </div>
+<% end %>

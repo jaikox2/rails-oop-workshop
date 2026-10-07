@@ -1,0 +1,16 @@
+<section class="page-shell" aria-labelledby="edit-product-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Edit product</p>
+      <h1 id="edit-product-title" class="page-title">แก้ไขสินค้า</h1>
+      <p class="page-subtitle">อัปเดตข้อมูลของ <%= @product.name %> โดยไม่กระทบราคาที่บันทึกไว้ในออเดอร์เดิม</p>
+    </div>
+  </div>
+
+  <%= render "form", product: @product %>
+
+  <div class="action-row">
+    <%= link_to "ดูรายละเอียดสินค้า", @product, class: "button button-secondary" %>
+    <%= link_to "กลับไปรายการสินค้า", products_path, class: "button button-ghost" %>
+  </div>
+</section>

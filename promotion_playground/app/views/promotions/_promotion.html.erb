@@ -1,0 +1,59 @@
+<% detail = local_assigns.fetch(:detail, false) %>
+<% show_actions = local_assigns.fetch(:show_actions, false) %>
+<% has_rule_values = [promotion.amount_cents, promotion.percentage, promotion.minimum_spend_cents, promotion.maximum_discount_cents, promotion.minimum_quantity].any?(&:present?) %>
+
+<article id="<%= dom_id promotion %>" class="<%= detail ? 'detail-card' : 'resource-card' %>" aria-labelledby="<%= dom_id(promotion, :title) %>">
+  <header class="card-header">
+    <div class="card-topline">
+      <span class="badge badge-type"><%= promotion.type_label %></span>
+      <span class="badge <%= promotion.active? ? 'badge-active' : 'badge-inactive' %>">
+        <%= promotion.active? ? "กำลังใช้งาน" : "พักการใช้งาน" %>
+      </span>
+    </div>
+    <h2 id="<%= dom_id(promotion, :title) %>" class="card-title"><%= promotion.name %></h2>
+    <p class="card-copy"><%= promotion.rule_summary %></p>
+  </header>
+
+  <div class="card-main">
+    <% if has_rule_values %>
+      <dl class="definition-list">
+        <% if promotion.amount_cents.present? %>
+          <div class="definition-row">
+            <dt class="definition-label">มูลค่าส่วนลด</dt>
+            <dd class="definition-value money"><%= money(promotion.amount_cents) %></dd>
+          </div>
+        <% end %>
+        <% if promotion.percentage.present? %>
+          <div class="definition-row">
+            <dt class="definition-label">เปอร์เซ็นต์ส่วนลด</dt>
+            <dd class="definition-value"><%= promotion.percentage %>%</dd>
+          </div>
+        <% end %>
+        <% if promotion.minimum_spend_cents.present? %>
+          <div class="definition-row">
+            <dt class="definition-label">ยอดซื้อขั้นต่ำ</dt>
+            <dd class="definition-value money"><%= money(promotion.minimum_spend_cents) %></dd>
+          </div>
+        <% end %>
+        <% if promotion.maximum_discount_cents.present? %>
+          <div class="definition-row">
+            <dt class="definition-label">ลดสูงสุด</dt>
+            <dd class="definition-value money"><%= money(promotion.maximum_discount_cents) %></dd>
+          </div>
+        <% end %>
+        <% if promotion.minimum_quantity.present? %>
+          <div class="definition-row">
+            <dt class="definition-label">จำนวนขั้นต่ำ</dt>
+            <dd class="definition-value"><%= promotion.minimum_quantity %> ชิ้น</dd>
+          </div>
+        <% end %>
+      </dl>
+    <% end %>
+  </div>
+
+  <% if show_actions %>
+    <footer class="card-footer">
+      <%= link_to "ดูรายละเอียดโปรโมชั่น", promotion, class: "button button-secondary button-block" %>
+    </footer>
+  <% end %>
+</article>

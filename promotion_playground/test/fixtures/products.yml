@@ -1,0 +1,19 @@
+# Products used across controller and system tests.
+
+one:
+  name: Live T-Shirt
+  sku: SHIRT-TEST-001
+  price_cents: 59000
+  active: true
+
+two:
+  name: Canvas Bag
+  sku: BAG-TEST-002
+  price_cents: 35000
+  active: true
+
+unused:
+  name: Unused Product
+  sku: UNUSED-TEST-003
+  price_cents: 10000
+  active: true
