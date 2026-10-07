@@ -1,0 +1,13 @@
+# Each order has at least one valid line item.
+
+one:
+  order: one
+  product: one
+  quantity: 2
+  unit_price_cents: 59000
+
+two:
+  order: two
+  product: two
+  quantity: 1
+  unit_price_cents: 35000

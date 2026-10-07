@@ -1,0 +1,17 @@
+# Orders have stored totals and associated line items.
+
+one:
+  customer_name: Alice Test
+  status: 0
+  promotion: one
+  subtotal_cents: 118000
+  discount_cents: 10000
+  total_cents: 108000
+
+two:
+  customer_name: Bob Test
+  status: 1
+  promotion: two
+  subtotal_cents: 35000
+  discount_cents: 3500
+  total_cents: 31500

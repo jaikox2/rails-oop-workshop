@@ -1,0 +1,15 @@
+<section class="page-shell" aria-labelledby="new-product-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">New product</p>
+      <h1 id="new-product-title" class="page-title">เพิ่มสินค้า</h1>
+      <p class="page-subtitle">กรอกข้อมูลสินค้าให้พร้อมสำหรับเลือกใช้ในออเดอร์</p>
+    </div>
+  </div>
+
+  <%= render "form", product: @product %>
+
+  <div class="action-row">
+    <%= link_to "กลับไปรายการสินค้า", products_path, class: "button button-ghost" %>
+  </div>
+</section>

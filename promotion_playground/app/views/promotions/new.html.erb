@@ -1,0 +1,15 @@
+<section class="page-shell" aria-labelledby="new-promotion-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">New promotion</p>
+      <h1 id="new-promotion-title" class="page-title">เพิ่มโปรโมชั่น</h1>
+      <p class="page-subtitle">เลือกประเภทส่วนลดและกรอกเฉพาะค่าที่เกี่ยวข้องกับกติกานั้น</p>
+    </div>
+  </div>
+
+  <%= render "form", promotion: @promotion %>
+
+  <div class="action-row">
+    <%= link_to "กลับไปรายการโปรโมชั่น", promotions_path, class: "button button-ghost" %>
+  </div>
+</section>

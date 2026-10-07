@@ -1,0 +1,16 @@
+<section class="page-shell" aria-labelledby="edit-promotion-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Edit promotion</p>
+      <h1 id="edit-promotion-title" class="page-title">แก้ไขโปรโมชั่น</h1>
+      <p class="page-subtitle">อัปเดตกติกาของ <%= @promotion.name %> โดยคงประเภทโปรโมชั่นเดิมไว้</p>
+    </div>
+  </div>
+
+  <%= render "form", promotion: @promotion %>
+
+  <div class="action-row">
+    <%= link_to "ดูรายละเอียดโปรโมชั่น", @promotion, class: "button button-secondary" %>
+    <%= link_to "กลับไปรายการโปรโมชั่น", promotions_path, class: "button button-ghost" %>
+  </div>
+</section>

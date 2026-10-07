@@ -1,0 +1,15 @@
+<section class="page-shell" aria-labelledby="new-order-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">New order</p>
+      <h1 id="new-order-title" class="page-title">สร้างออเดอร์</h1>
+      <p class="page-subtitle">ระบุลูกค้า เลือกสินค้า และทดลองใช้โปรโมชั่นก่อนให้ระบบคำนวณยอดสุทธิ</p>
+    </div>
+  </div>
+
+  <%= render "form", order: @order %>
+
+  <div class="action-row">
+    <%= link_to "กลับไปรายการออเดอร์", orders_path, class: "button button-ghost" %>
+  </div>
+</section>

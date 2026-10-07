@@ -1,0 +1,16 @@
+<section class="page-shell" aria-labelledby="edit-order-title">
+  <div class="page-heading">
+    <div class="heading-copy">
+      <p class="eyebrow">Edit order</p>
+      <h1 id="edit-order-title" class="page-title">แก้ไขออเดอร์ #<%= @order.id %></h1>
+      <p class="page-subtitle">ปรับข้อมูล สินค้า หรือโปรโมชั่น โดยสินค้าเดิมยังคง snapshot ราคาเดิม และระบบจะคำนวณยอดรวมอีกครั้งเมื่อบันทึก</p>
+    </div>
+  </div>
+
+  <%= render "form", order: @order %>
+
+  <div class="action-row">
+    <%= link_to "ดูรายละเอียดออเดอร์", @order, class: "button button-secondary" %>
+    <%= link_to "กลับไปรายการออเดอร์", orders_path, class: "button button-ghost" %>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+# STI promotion records share the promotions table.
+
+one:
+  name: Fixed 100
+  type: FixedAmountPromotion
+  active: true
+  amount_cents: 10000
+
+two:
+  name: Ten Percent
+  type: PercentagePromotion
+  active: true
+  percentage: 10
+  maximum_discount_cents: 20000
+
+unused:
+  name: Spend 1000 Save 150
+  type: MinimumSpendPromotion
+  active: true
+  amount_cents: 15000
+  minimum_spend_cents: 100000
